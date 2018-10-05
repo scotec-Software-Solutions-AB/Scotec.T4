@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="BuildNuGetPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+  <Import Project="Directories.proj"/>
+
+  <PropertyGroup>
+    <NuGetTempDir>$(RootDir)\NuGetTemp</NuGetTempDir>
+    <NuGet>"$(BuildDir)\NuGet\NuGet.exe"</NuGet>
+    <Spec>"$(BuildDir)\NuGet\omsice.nuspec"</Spec>
+  </PropertyGroup>
+
+
+  <Target Name="BuildNuGetPackage" DependsOnTargets="GetSVNVersion">
+
+    <PropertyGroup>
+      <NuGetVersion>$(VersionNumber).0.$(Revision)</NuGetVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Assembly40 Include="$(DeliveryDir)\4.0\*.*"/>
+      <LicenseFiles Include="$(LicenseDir)\OMS.Ice License.txt" />
+    </ItemGroup>
+
+
+    <Copy SourceFiles="@(Assembly40)" DestinationFolder="$(NuGetTempDir)\lib\net40-client" />
+    
+    <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(NuGetTempDir)" />
+
+    <Exec Command="$(NuGet) pack $(Spec) -Verbose -Symbols -BasePath $(NuGetTempDir) -OutputDirectory $(DeliveryDir) -Version $(NuGetVersion)"/>
+
+    <!-- Delete NuGet temp folder. -->
+    <Exec Command="rd /S /Q $(NuGetTempDir)"/>
+
+  </Target>
+
+
+  <Target Name="PushNuGetPackage" DependsOnTargets="GetSVNVersion">
+
+    <PropertyGroup>
+      <NuGetVersion>$(VersionNumber).0.$(Revision)</NuGetVersion>
+      <NuGetFile>$(DeliveryDir)\OMS.Ice.$(NuGetVersion).nupkg</NuGetFile>
+    </PropertyGroup>
+
+    <Exec Command="$(NuGet) push $(NuGetFile)"/>
+
+
+  </Target>
+
+</Project>

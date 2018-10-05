@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+
+  <ItemGroup>
+    
+    <!-- Ribbon -->
+    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\OMS.Ice.T4Generator.dll" />
+    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\OMS.Ice.T4Generator.pdb" />
+    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\OMS.Ice.T4Generator.xml" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+  </ItemGroup>
+
+  <Target Name="build">
+
+    <Copy SourceFiles="@(CopyDelivery)" DestinationFolder="$(DeliveryDir)" SkipUnchangedFiles="true" />
+
+  </Target>
+
+</Project>

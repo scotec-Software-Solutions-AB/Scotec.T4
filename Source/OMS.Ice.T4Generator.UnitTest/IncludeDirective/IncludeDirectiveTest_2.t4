@@ -1,0 +1,3 @@
+﻿<#@ template language="C#" #>
+<#@ include file="IncludeDirectiveTest_2_1.t4" #>
+AFTER INCLUDE

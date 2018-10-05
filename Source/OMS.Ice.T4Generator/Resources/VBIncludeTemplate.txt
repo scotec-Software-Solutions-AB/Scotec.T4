@@ -1,0 +1,4 @@
+﻿
+		Private Sub <%templatename%>TemplateMethod( <%parameters%>)
+<%include%>
+		End Sub

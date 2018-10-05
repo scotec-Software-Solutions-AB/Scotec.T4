@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+  <Import Project=".\MSBuild\SYSTECS\SYSTECS.Build.Tasks.targets"/>
+  <Import Project=".\MSBuild\MSBuildCommunityTasks\MSBuild.Community.Tasks.Targets"/>
+
+  <Import Project="Version.proj"/>
+
+</Project>

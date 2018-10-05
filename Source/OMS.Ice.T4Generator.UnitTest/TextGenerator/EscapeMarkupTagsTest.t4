@@ -1,0 +1,8 @@
+﻿<#@ template language="C#" #>
+\<#@ template language="C#" \#>
+\<#@ import namespace="System" \#>
+\<# int i=3; \#>
+<#-- Comment  #>\<#-- Comment  \#>
+TEXT \<#= i.ToString() \#> TEXT \<#= Func() \#>\<#+ 
+string Func() { return "a"; } 
+\#>

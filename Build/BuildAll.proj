@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+	<!-- Imports -->
+	<Import Project=".\Directories.proj"/>
+
+
+  <Target Name="BuildAll" DependsOnTargets="">
+
+    <PropertyGroup  Condition="$(TargetVersion)=='' ">
+      <TargetVersion>4.0</TargetVersion>
+    </PropertyGroup>
+
+    
+    <!-- Set the assembly version number. -->
+    <MSBuild	Projects="SetVersionNumber.proj" Condition="$(Configuration)=='Release'" StopOnFirstFailure="true" Targets="SetVersionNumber" />
+
+    <!-- Build framework and common plug-ins. -->
+    <MSBuild	Projects="Build.proj" StopOnFirstFailure="true" Targets="Build" />
+
+    <!-- Revert the revision number. -->
+    <MSBuild	Projects="RevertVersionNumber.proj" Condition="$(Configuration)=='Release'" StopOnFirstFailure="true" Targets="RevertVersionNumber" />
+
+    <!-- Copy SAF files to delivery. -->
+    <MSBuild	Projects="CopyToDelivery.proj" StopOnFirstFailure="true" Targets="CopyToDelivery" Properties="TargetVersion=$(TargetVersion)"/>
+
+  </Target>
+
+  
+</Project>

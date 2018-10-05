@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.5">
+
+
+  <PropertyGroup>
+    <VersionNumber>2.0.0</VersionNumber>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Version>$(VersionNumber).0</Version>
+	<Revision>1803</Revision>
+  </PropertyGroup>
+
+  <Target Name="GetSVNVersion">
+    <!-- <SvnVersion LocalPath="$(RootDir)" ToolPath="$(ToolsPath)\Subversion\bin\" UseLastCommittedRevision="true"> -->
+      <!-- <Output TaskParameter="Revision" PropertyName="Revision" /> -->
+    <!-- </SvnVersion> -->
+    <!-- <Message Text="Revision: $(Revision)"/> -->
+  </Target>
+
+</Project>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+	<!-- Running this build script requires MSBuild Community Tasks to be installed. -->
+	
+	<!-- Imports -->
+	<Import Project="Directories.proj"/>
+
+
+  <Target Name="Build">
+
+    <ItemGroup>
+
+      <!-- Select all C# projects. -->
+      <CSProjects Include="$(SourceDir)\**\*.csproj"
+                  Exclude="$(SourceDir)\**\*.Test.csproj"/>
+
+
+    </ItemGroup>
+
+    <!-- Build all C# projects -->
+    <MSBuild Projects="@(CSProjects)" Targets="Build" ContinueOnError="false" />
+
+  </Target>
+  
+
+</Project>

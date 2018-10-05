@@ -1,0 +1,10 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- These tasks are specific to the build process defined in this file, and are not considered general-purpose build tasks. -->
+	<UsingTask TaskName="Systecs.Build.Tasks.AssemblyInfo"  AssemblyFile="SYSTECS.Build.Tasks.dll" />
+	<UsingTask TaskName="Systecs.Build.Tasks.CopyFiles"  AssemblyFile="SYSTECS.Build.Tasks.dll" />
+	<UsingTask TaskName="Systecs.Build.Tasks.CopyFolder"  AssemblyFile="SYSTECS.Build.Tasks.dll" />
+	<UsingTask TaskName="Systecs.Build.Tasks.SetEnvVar"  AssemblyFile="SYSTECS.Build.Tasks.dll" />
+  <UsingTask TaskName="Systecs.Build.Tasks.ConvertProject"  AssemblyFile="SYSTECS.Build.Tasks.dll" />
+  
+</Project>

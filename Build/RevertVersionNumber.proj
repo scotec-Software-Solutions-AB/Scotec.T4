@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="RevertVersionNumber" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+  <Import Project="Directories.proj"/>
+
+
+  <Target Name="RevertVersionNumber">
+
+    <Exec Command='dir /S /B  "$(SourceDir)\AssemblyInfo.cs" > "$(BuildDir)\Params.txt"' />
+
+    <!-- Revert version number in assembly infos. -->
+    <SvnClient LocalPath="" ToolPath="$(ToolsPath)\Subversion\bin\" Command='--targets "$(BuildDir)\Params.txt" revert' />
+
+  </Target>
+
+
+</Project>

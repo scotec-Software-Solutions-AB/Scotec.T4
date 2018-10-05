@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+
+  <Import Project="Base.proj"/>
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+  </PropertyGroup>
+
+
+  <!-- Tools directory. E.g. subversion. -->
+  <!-- Distinguish between Windows x32 and x64.-->
+  <Choose>
+    <When Condition="Exists('$(ProgramFiles) (x86)')">
+      <PropertyGroup>
+        <ToolsPath>$(ProgramFiles) (x86)</ToolsPath>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <ToolsPath>$(ProgramFiles)</ToolsPath>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+
+
+  <!-- SAF Root folders -->
+  <PropertyGroup>
+
+    <!-- Absolute path of the SAF root directory. -->
+    <RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+
+    <!-- Contains build files-->
+    <BuildDir>$(RootDir)\Build</BuildDir>
+
+    <!-- Target folder for the build process-->
+    <DeliveryDir>$(RootDir)\Delivery</DeliveryDir>
+
+    <!-- Contains the sources for the framework and the common components. -->
+    <LicenseDir>$(RootDir)\Licenses</LicenseDir>
+
+    <!-- Contains Third-Party assemblies needed at application runtime. -->
+    <!-- This folder must not be used to reference assemblies within the project files. -->
+    <RuntimeDir>$(RootDir)\Runtime</RuntimeDir>
+
+    <!-- Contains the sources for the framework and the common components. -->
+    <SourceDir>$(RootDir)\Source</SourceDir>
+
+    <!-- Contains SAF documents such as architecture diagrams. -->
+    <DocumentsDir>$(RootDir)\Documents</DocumentsDir>
+
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,23 @@
+﻿<%imports%>
+
+namespace <%namespace%>
+{
+	public sealed partial class <%classname%> : <%baseclassname%>
+	{
+<%fields%>
+
+		public <%classname%>(string endOfLine<%parameters%>) : base(endOfLine)
+		{
+<%fieldinitializations%>
+		}
+		
+		protected override void Generate()
+		{
+<%implementation%>
+		}
+
+<%features%>
+<%includes%>
+
+	}
+}
