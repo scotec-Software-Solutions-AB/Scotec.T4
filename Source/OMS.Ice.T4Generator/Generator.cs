@@ -193,7 +193,7 @@ namespace OMS.Ice.T4Generator
 
             var references = assemlyPaths.Select( ( path ) => MetadataReference.CreateFromFile( path ) ).ToArray();
 
-            var compilation = CSharpCompilation.Create( codeBuilder.ClassName + ".dll", syntaxTrees, references,
+            var compilation = CSharpCompilation.Create( $"{codeBuilder.ClassName}_{Guid.NewGuid():D}.dll", syntaxTrees, references,
                                                        new CSharpCompilationOptions( OutputKind.DynamicallyLinkedLibrary ) );
 
             using( var ms = new MemoryStream() )
