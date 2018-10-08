@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <ProductVersion>3.0.0</ProductVersion>
-    <BetaFlag>-beta1</BetaFlag>
+    <BetaFlag></BetaFlag>
   </PropertyGroup>
 
 </Project>
