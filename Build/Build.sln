@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build Scripts", "Build Scri
 		BuildNuGetPackage.proj = BuildNuGetPackage.proj
 		CopyToDelivery.proj = CopyToDelivery.proj
 		Directories.proj = Directories.proj
-		Push NuGet Package.bat = Push NuGet Package.bat
+		Push NuGet Package.proj = Push NuGet Package.proj
 		RemoveFolders.proj = RemoveFolders.proj
 		Version.proj = Version.proj
 	EndProjectSection
