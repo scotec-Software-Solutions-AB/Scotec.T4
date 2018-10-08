@@ -25,6 +25,11 @@ namespace OMS.Ice.T4Generator.UnitTest
 
         protected void Run( string template, string expectedResult, params object[] data )
         {
+            Run( template, false, expectedResult, data );
+        }
+
+        protected void Run( string template, bool noCache, string expectedResult, params object[] data )
+        {
             var generator = Generator;
 
             //generator.Settings.EndOfLine = EndOfLine.CRLF;
@@ -32,7 +37,7 @@ namespace OMS.Ice.T4Generator.UnitTest
             var stream = new MemoryStream();
             var textWriter = new StreamWriter( stream, Encoding.UTF32 );
 
-            generator.Generate( BuildPath( template ), textWriter, data );
+            generator.Generate( BuildPath( template ), noCache, textWriter, data );
 
             stream.Seek( 0, SeekOrigin.Begin );
             var textReader = new StreamReader( stream );
@@ -44,12 +49,17 @@ namespace OMS.Ice.T4Generator.UnitTest
 
         protected string Run( string template, object[] data )
         {
+            return Run( template, false, data );
+        }
+
+        protected string Run( string template, bool noCache, object[] data )
+        {
             var generator = Generator;
 
             var stream = new MemoryStream();
             var textWriter = new StreamWriter( stream, Encoding.UTF32 );
 
-            generator.Generate( BuildPath( template ), textWriter, data );
+            generator.Generate( BuildPath( template ), noCache, textWriter, data );
 
             stream.Seek( 0, SeekOrigin.Begin );
             var textReader = new StreamReader( stream );

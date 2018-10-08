@@ -9,8 +9,8 @@ using System.Runtime.Loader;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using OMS.Ice.T4Generator.CodeBuilder;
+using OMS.Ice.T4Generator.Compiler;
 using OMS.Ice.T4Generator.Syntax;
 
 #endregion
@@ -37,17 +37,18 @@ namespace OMS.Ice.T4Generator
         private IGeneratorSettings Settings { get; }
 
 
-        private Type GetGeneratorType( string template )
+        private Type GetGeneratorType( string template, bool noCache )
         {
             Task<Type> task;
 
             lock( CompilationTasks )
             {
-                if( !CompilationTasks.TryGetValue( template, out task ) )
+                if( noCache || !CompilationTasks.TryGetValue( template, out task ) )
                 {
                     task = new Task<Type>( () => Compile( template ) );
 
-                    CompilationTasks.Add( template, task );
+                    if(!noCache)
+                        CompilationTasks.Add( template, task );
 
                     task.Start();
                 }
@@ -59,7 +60,7 @@ namespace OMS.Ice.T4Generator
             return task.Result;
         }
 
-        private void GenerateToFile( string template, Encoding encoding, string output, params object[] parameters )
+        private void GenerateToFile( string template, bool noCache, Encoding encoding, string output, params object[] parameters )
         {
             var path = Path.GetDirectoryName( output );
             if( string.IsNullOrEmpty( path ) )
@@ -72,7 +73,7 @@ namespace OMS.Ice.T4Generator
 
                 using( var writer = new StreamWriter( output, false, encoding ) {AutoFlush = false} )
                 {
-                    Generate( template, writer, parameters );
+                    Generate( template, noCache, writer, parameters );
                     writer.Close();
                 }
             }
@@ -87,19 +88,19 @@ namespace OMS.Ice.T4Generator
         }
 
 
-        private void Generate( string template, TextWriter output, params object[] parameters )
+        private void Generate( string template, bool noCache, TextWriter output, params object[] parameters )
         {
-            var generatorType = GetGeneratorType( template );
+            var generatorType = GetGeneratorType( template, noCache );
 
             // Get the constructor for the generator.
             // First parameter is always a string for the endOfLine. This is parameter is implicit and not visible to the user.
             var parameterTypes = new List<Type> {typeof( string )};
-            parameterTypes.AddRange(parameters.Select(parameter => parameter.GetType()));
+            parameterTypes.AddRange( parameters.Select( parameter => parameter.GetType() ) );
             var constructor = generatorType.GetConstructor( parameterTypes.ToArray() );
 
 // ReSharper disable PossibleNullReferenceException
             var parameterList = new List<object> {GetEndOfLine()}.Concat( parameters ).ToArray();
-            dynamic generator = constructor.Invoke(parameterList);
+            dynamic generator = constructor.Invoke( parameterList );
 // ReSharper restore PossibleNullReferenceException
 
             generator.Generate( output );
@@ -110,7 +111,7 @@ namespace OMS.Ice.T4Generator
 
         private string GetEndOfLine()
         {
-            switch (Settings.EndOfLine)
+            switch( Settings.EndOfLine )
             {
                 case EndOfLine.CR:
                     return "\r";
@@ -166,35 +167,9 @@ namespace OMS.Ice.T4Generator
             }
 
             var assemlyPaths = GetReferencedAssemlies( parserResult );
-            // ReSharper restore PossibleMultipleEnumeration
-
-#if OLD
-// Create the generator assembly.
-            var provider = GetCodeDomProvider( templateDirective.Language, templateDirective.CompilerVersion );
-            var parameter = new CompilerParameters( assemlyPaths ) //, codeBuilder.ClassName + ".dll" )
-                {GenerateExecutable = false, GenerateInMemory = true}; //, IncludeDebugInformation = true};
-
-            var results = provider.CompileAssemblyFromSource( parameter, code, codeFile );
-            if( results.Errors.HasErrors )
-            {
-                throw new T4CompilerException( "Error while building generator assembly.",
-                                              (from e in results.Errors.Cast<CompilerError>()
-                                                  select e).ToList(),
-                                              code, codeFile );
-            }
-
-            // Return the generator type.
-            var assembly = results.CompiledAssembly;
-            return assembly.GetType( codeBuilder.GeneratorType );
-#endif
-            var syntaxTrees = new List<SyntaxTree> {CSharpSyntaxTree.ParseText( code )};
-            if( !string.IsNullOrEmpty( codeFile ) )
-                syntaxTrees.Add( CSharpSyntaxTree.ParseText( codeFile ) );
-
             var references = assemlyPaths.Select( ( path ) => MetadataReference.CreateFromFile( path ) ).ToArray();
-
-            var compilation = CSharpCompilation.Create( $"{codeBuilder.ClassName}_{Guid.NewGuid():D}.dll", syntaxTrees, references,
-                                                       new CSharpCompilationOptions( OutputKind.DynamicallyLinkedLibrary ) );
+            var compiler = GetCompiler( templateDirective.Language );
+            var compilation = compiler.Compile( codeBuilder.ClassName, code, codeFile, references );
 
             using( var ms = new MemoryStream() )
             {
@@ -218,6 +193,20 @@ namespace OMS.Ice.T4Generator
             }
 
             return null;
+        }
+
+        private CodeCompiler GetCompiler( string templateDirectiveLanguage )
+        {
+            switch( templateDirectiveLanguage )
+            {
+                case "CS":
+                case "C#":
+                    return new CSharpCompiler();
+                case "VB":
+                    return new VisualBasicCompiler();
+                default:
+                    throw new T4Exception( $"Unknown language; {templateDirectiveLanguage} " );
+            }
         }
 
         private string[] GetReferencedAssemlies( ParserResult parserResult )
@@ -419,21 +408,36 @@ namespace OMS.Ice.T4Generator
 
         void IGenerator.GenerateToFile( string template, string output, params object[] parameters )
         {
-            GenerateToFile( template, Encoding.UTF8, output, parameters );
+            GenerateToFile( template, false, Encoding.UTF8, output, parameters );
+        }
+
+        void IGenerator.GenerateToFile( string template, bool noCache, string output, params object[] parameters )
+        {
+            GenerateToFile( template, noCache, Encoding.UTF8, output, parameters );
         }
 
 
         void IGenerator.GenerateToFile( string template, Encoding encoding, string output, params object[] parameters )
         {
-            GenerateToFile( template, encoding, output, parameters );
+            GenerateToFile( template, false, encoding, output, parameters );
+        }
+
+        void IGenerator.GenerateToFile( string template, bool noCache, Encoding encoding, string output, params object[] parameters )
+        {
+            GenerateToFile( template, noCache, encoding, output, parameters );
         }
 
 
         void IGenerator.Generate( string template, TextWriter output, params object[] parameters )
         {
+            Generate( template, false, output, parameters );
+        }
+
+        void IGenerator.Generate( string template, bool noCache, TextWriter output, params object[] parameters )
+        {
             try
             {
-                Generate( template, output, parameters );
+                Generate( template, noCache, output, parameters );
             }
             catch( T4Exception )
             {
@@ -445,9 +449,17 @@ namespace OMS.Ice.T4Generator
             }
         }
 
-        Task IGenerator.Compile( IEnumerable<string> templates )
+        Task IGenerator.Compile( IEnumerable<string> templates)
         {
-            var task = new Task( () => Parallel.ForEach( templates, template => GetGeneratorType( template ) ) );
+            var task = new Task( () => Parallel.ForEach( templates, template => GetGeneratorType( template, false ) ) );
+            task.Start();
+
+            return task;
+        }
+
+        Task IGenerator.Compile( IEnumerable<string> templates, bool noCache )
+        {
+            var task = new Task( () => Parallel.ForEach( templates, template => GetGeneratorType( template, noCache ) ) );
             task.Start();
 
             return task;

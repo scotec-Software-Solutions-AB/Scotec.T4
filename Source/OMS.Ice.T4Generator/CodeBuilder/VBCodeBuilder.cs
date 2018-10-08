@@ -66,7 +66,7 @@ namespace OMS.Ice.T4Generator.CodeBuilder
         protected override void CreateTextBlock( StringBuilder result, IEnumerable<LineInfo> content )
         {
             foreach( var line in content )
-                result.AppendLine( $"\t\t\tWrite( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} );");
+                result.AppendLine( $"\t\t\tWrite( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} )");
         }
 
         protected override void CreateInlineCode( StringBuilder result, string statement )
