@@ -106,7 +106,7 @@ namespace OMS.Ice.T4Generator.CodeBuilder
         {
             var imports = CreateImports( _imports );
             var fields = CreateFields( _parameters );
-            var parameters = CreateParameters( _parameters );
+            var parameters = _parameters.Any() ? $", {CreateParameters(_parameters)}" : string.Empty;
             var initializers = CreateFieldInitializers( _parameters );
             var implementation = CreateImplementation( Parts );
             var features = CreateFeatures();
@@ -214,7 +214,7 @@ namespace OMS.Ice.T4Generator.CodeBuilder
                 var content = GetIncludeTemplate();
                 var parameters = CreateParameters( GetParameters( include.Value ) );
                 content = content.Replace( "<%templatename%>", include.Key.Name );
-                content = content.Replace( "<%parameters%>", parameters.ToString() );
+                content = content.Replace( "<%parameters%>", parameters );
                 content = content.Replace( "<%include%>", CreateImplementation( include.Value ).ToString() );
                 result.Append( content );
             }
@@ -239,21 +239,21 @@ namespace OMS.Ice.T4Generator.CodeBuilder
 
         protected abstract string GetIncludeTemplate();
 
-        protected abstract StringBuilder CreateImports( IEnumerable<string> imports );
+        protected abstract string CreateImports( IEnumerable<string> imports );
 
-        protected abstract StringBuilder CreateFields( IEnumerable<Parameter> parameters );
+        protected abstract string CreateFields( IEnumerable<Parameter> parameters );
 
-        protected abstract StringBuilder CreateParameters( IEnumerable<Parameter> parameters );
+        protected abstract string CreateParameters( IEnumerable<Parameter> parameters );
 
-        protected abstract StringBuilder CreateCallParameters( IEnumerable<Parameter> parameters );
+        protected abstract string CreateCallParameters( IEnumerable<Parameter> parameters );
 
-        protected abstract StringBuilder CreateFieldInitializers( IEnumerable<Parameter> parameters );
+        protected abstract string CreateFieldInitializers( IEnumerable<Parameter> parameters );
 
         protected abstract void CreateTextBlock( StringBuilder result, IEnumerable<LineInfo> content );
 
         protected abstract void CreateInlineCode( StringBuilder result, string statement );
 
-        protected abstract StringBuilder CreateMethodCall( StringBuilder result, IncludeDirective directive );
+        protected abstract string CreateMethodCall( StringBuilder result, IncludeDirective directive );
 
         protected abstract string BeginLinePragma( Part part );
 

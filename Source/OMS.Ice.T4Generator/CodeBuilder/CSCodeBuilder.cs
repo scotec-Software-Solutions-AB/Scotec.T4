@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using OMS.Ice.T4Generator.Properties;
 using OMS.Ice.T4Generator.Syntax;
@@ -22,63 +23,44 @@ namespace OMS.Ice.T4Generator.CodeBuilder
             return Resources.CSIncludeTemplate;
         }
 
-        protected override StringBuilder CreateImports( IEnumerable<string> imports )
+        protected override string CreateImports( IEnumerable<string> imports )
         {
             var result = new StringBuilder();
 
             foreach( var import in imports )
                 result.AppendLine( $"using {import};" );
 
-            return result;
+            return result.ToString();
         }
 
-        protected override StringBuilder CreateFields( IEnumerable<Parameter> parameters )
+        protected override string CreateFields( IEnumerable<Parameter> parameters )
         {
             var result = new StringBuilder();
 
             foreach( var parameter in parameters )
                 result.AppendLine( $"\t\tprivate {parameter.Type} {parameter.Name};" );
 
-            return result;
+            return result.ToString();
         }
 
-        protected override StringBuilder CreateParameters( IEnumerable<Parameter> parameters )
+        protected override string CreateParameters( IEnumerable<Parameter> parameters)
         {
-            var result = new StringBuilder();
-
-            foreach( var parameter in parameters )
-            {
-                result.Append( $", {parameter.Type} {parameter.Name}" );
-            }
-
-            return result;
+            return string.Join(",", parameters.Select(parameter => $"{parameter.Type} {parameter.Name}"));
         }
 
-        protected override StringBuilder CreateCallParameters( IEnumerable<Parameter> parameters )
+        protected override string CreateCallParameters( IEnumerable<Parameter> parameters )
         {
-            var result = new StringBuilder();
-
-            var first = true;
-            foreach( var parameter in parameters )
-            {
-                if( !first )
-                    result.Append( ", " );
-                first = false;
-
-                result.Append( $"{parameter.Name}" );
-            }
-
-            return result;
+            return string.Join( ",", parameters.Select( parameter => parameter.Name ) );
         }
 
-        protected override StringBuilder CreateFieldInitializers( IEnumerable<Parameter> parameters )
+        protected override string CreateFieldInitializers( IEnumerable<Parameter> parameters )
         {
             var result = new StringBuilder();
 
             foreach( var parameter in parameters )
                 result.AppendLine( string.Format( "\t\t\tthis.{0} = {0};", parameter.Name ) );
 
-            return result;
+            return result.ToString();
         }
 
         protected override void CreateTextBlock( StringBuilder result, IEnumerable<LineInfo> content )
@@ -92,13 +74,13 @@ namespace OMS.Ice.T4Generator.CodeBuilder
             result.AppendLine( $"\t\t\tWrite( {statement} );" );
         }
 
-        protected override StringBuilder CreateMethodCall( StringBuilder result, IncludeDirective directive )
+        protected override string CreateMethodCall( StringBuilder result, IncludeDirective directive )
         {
             var parameters = GetParameters( IncludedTemplates[directive] );
 
             result.AppendLine( $"\t\t\t{directive.Name}TemplateMethod({CreateCallParameters( parameters )});" );
 
-            return result;
+            return result.ToString();
         }
 
         protected override string BeginLinePragma( Part part )
