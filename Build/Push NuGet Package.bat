@@ -1,6 +1,23 @@
-@call "%VS110COMNTOOLS%vsvars32.bat"
+<?xml version="1.0" encoding="utf-8" ?>
+<Project DefaultTargets="PushNuGetPackage" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
 
-@msbuild "BuildNuGetPackage.proj" /t:PushNuGetPackage
+  <Import Project="Base.proj"/>
 
+  <PropertyGroup>
+    <NuGet>"$(BuildDir)\NuGet\NuGet.exe"</NuGet>
+  </PropertyGroup>
 
-pause
+  <Target Name="PushNuGetPackage">
+
+    <PropertyGroup>
+      <NuGetFile>$(DeliveryDir)\OMS.Ice.$(ProductVersion)$(BetaFlag).nupkg</NuGetFile>
+    </PropertyGroup>
+
+    <!--<Exec Command='$(NuGet) sources Add -Name "SAF" -Source "https://tfs2018.systecs.local/SYSTECS%20TA/_packaging/SAF/nuget/v3/index.json"'/>-->
+    <!--<Exec Command='$(NuGet) push -Source "SAF" -ApiKey VSTS $(NuGetFile)'/>-->
+    <Exec Command='$(NuGet) push -Source "nuget.org" $(NuGetFile)'/>
+
+  </Target>
+
+</Project>
+

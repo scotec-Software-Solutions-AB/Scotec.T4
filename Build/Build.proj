@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
 
-	<!-- Running this build script requires MSBuild Community Tasks to be installed. -->
-	
 	<!-- Imports -->
 	<Import Project="Directories.proj"/>
 
@@ -12,11 +10,16 @@
     <ItemGroup>
 
       <!-- Select all C# projects. -->
+      <Solutions Include="$(SourceDir)\**\*.sln" />
       <CSProjects Include="$(SourceDir)\**\*.csproj"
-                  Exclude="$(SourceDir)\**\*.Test.csproj"/>
+                  Exclude="$(SourceDir)\**\*.UnitTest.csproj"/>
 
 
     </ItemGroup>
+
+    <!-- Restore all Nuget packages. -->
+    <!-- Restore does not work with list of projects so we have to use the solution. -->
+    <MSBuild Projects="@(Solutions)" Targets="Restore" ContinueOnError="false" />
 
     <!-- Build all C# projects -->
     <MSBuild Projects="@(CSProjects)" Targets="Build" ContinueOnError="false" />

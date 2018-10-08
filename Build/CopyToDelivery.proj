@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Project DefaultTargets="CopyToDelivery" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="CopyToDelivery" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
 
-  <!-- Imports -->
-  <Import Project=".\Directories.proj"/>
+  <Import Project="Base.proj"/>
 
   <Target Name="CopyToDelivery" >
 
     <ItemGroup>
       <CopyToDelivery Include="$(SourceDir)\**\Build\CopyToDelivery.proj_" />
     </ItemGroup>
-  
+
     <MakeDir Directories="$(DeliveryDir)"/>
-    
-    <MSBuild Projects="@(CopyToDelivery)" Properties="DeliveryDir=$(DeliveryDir)\$(TargetVersion)" />
+
+    <MSBuild Projects="@(CopyToDelivery)" Properties="DeliveryDir=$(DeliveryDir)" />
 
   </Target>
-
-
-
 
 </Project>
 

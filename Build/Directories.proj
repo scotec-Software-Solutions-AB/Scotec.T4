@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
-
-  <Import Project="Base.proj"/>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
 
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -23,8 +21,6 @@
     </Otherwise>
   </Choose>
 
-
-
   <!-- SAF Root folders -->
   <PropertyGroup>
 
@@ -38,17 +34,10 @@
     <DeliveryDir>$(RootDir)\Delivery</DeliveryDir>
 
     <!-- Contains the sources for the framework and the common components. -->
-    <LicenseDir>$(RootDir)\Licenses</LicenseDir>
-
-    <!-- Contains Third-Party assemblies needed at application runtime. -->
-    <!-- This folder must not be used to reference assemblies within the project files. -->
-    <RuntimeDir>$(RootDir)\Runtime</RuntimeDir>
-
-    <!-- Contains the sources for the framework and the common components. -->
     <SourceDir>$(RootDir)\Source</SourceDir>
 
-    <!-- Contains SAF documents such as architecture diagrams. -->
-    <DocumentsDir>$(RootDir)\Documents</DocumentsDir>
+    <!-- Nuget folder-->
+    <NuGetDir>$(RootDir)\NuGet</NuGetDir>
 
   </PropertyGroup>
 

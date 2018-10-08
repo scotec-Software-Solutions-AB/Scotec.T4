@@ -4,9 +4,9 @@
   <ItemGroup>
     
     <!-- Ribbon -->
-    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\OMS.Ice.T4Generator.dll" />
-    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\OMS.Ice.T4Generator.pdb" />
-    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\OMS.Ice.T4Generator.xml" />
+    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\netstandard2.0\OMS.Ice.T4Generator.dll" />
+    <CopyDelivery Include="..\OMS.Ice.T4Generator\bin\$(Configuration)\netstandard2.0\OMS.Ice.T4Generator.pdb" />
+    <CopyDelivery Include="..\OMS.Ice.T4Generator\OMS.Ice.T4Generator.xml" />
 
   </ItemGroup>
 

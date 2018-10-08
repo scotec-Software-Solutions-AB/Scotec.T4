@@ -19,8 +19,13 @@ namespace OMS.Ice.T4Generator.Compiler
             if( !string.IsNullOrEmpty( codeBehind ) )
                 syntaxTrees.Add( CSharpSyntaxTree.ParseText( codeBehind ) );
 
+            var x = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
+            
+
             return VisualBasicCompilation.Create( $"{className}_{Guid.NewGuid():D}.dll", syntaxTrees, references,
-                                                 new VisualBasicCompilationOptions( OutputKind.DynamicallyLinkedLibrary ) );
+                                                 new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, false, null, null, "Script", null, null, OptionStrict.Off, true, true, false, null, false, OptimizationLevel.Release) );
+
+
         }
     }
 }

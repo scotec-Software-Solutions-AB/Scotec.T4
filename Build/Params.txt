@@ -1,3 +1,0 @@
-D:\Projects\Private\OMS.Ice\trunk\Source\OMS.Ice.T4Generator\Properties\AssemblyInfo.cs
-D:\Projects\Private\OMS.Ice\trunk\Source\OMS.Ice.T4Generator.Test\Properties\AssemblyInfo.cs
-D:\Projects\Private\OMS.Ice\trunk\Source\OMS.Ice.T4Generator.Tutorial\Properties\AssemblyInfo.cs

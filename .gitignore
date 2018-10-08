@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/Source/OMS.Ice.T4Generator/OMS.Ice.T4Generator.xml
+/Delivery

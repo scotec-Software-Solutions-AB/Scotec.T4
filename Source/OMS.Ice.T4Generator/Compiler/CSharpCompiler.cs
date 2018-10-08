@@ -19,7 +19,8 @@ namespace OMS.Ice.T4Generator.Compiler
                 syntaxTrees.Add( CSharpSyntaxTree.ParseText( codeBehind ) );
 
             return CSharpCompilation.Create( $"{className}_{Guid.NewGuid():D}.dll", syntaxTrees, references,
-                                            new CSharpCompilationOptions( OutputKind.DynamicallyLinkedLibrary ) );
+                                            new CSharpCompilationOptions( OutputKind.DynamicallyLinkedLibrary, false, null, null, null, null, OptimizationLevel.Release  ) );
+
         }
     }
 }

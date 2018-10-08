@@ -169,7 +169,7 @@ namespace OMS.Ice.T4Generator
             var assemlyPaths = GetReferencedAssemlies( parserResult );
             var references = assemlyPaths.Select( ( path ) => MetadataReference.CreateFromFile( path ) ).ToArray();
             var compiler = GetCompiler( templateDirective.Language );
-            var compilation = compiler.Compile( codeBuilder.ClassName, code, codeFile, references );
+            var compilation = compiler.Compile(codeBuilder.ClassName, code, codeFile, references );
 
             using( var ms = new MemoryStream() )
             {

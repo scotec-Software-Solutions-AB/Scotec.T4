@@ -1,30 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<Project DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="15.0">
 
-	<!-- Imports -->
-	<Import Project=".\Directories.proj"/>
-
+  <!-- Imports -->
+  <Import Project="Base.proj"/>
 
   <Target Name="BuildAll" DependsOnTargets="">
 
-    <PropertyGroup  Condition="$(TargetVersion)=='' ">
-      <TargetVersion>4.0</TargetVersion>
-    </PropertyGroup>
+    <!-- Delete all build directoris (bin, delivery, ...). -->
+    <MSBuild	Projects="RemoveFolders.proj" StopOnFirstFailure="true" Targets="RemoveFolders" />
 
-    
-    <!-- Set the assembly version number. -->
-    <MSBuild	Projects="SetVersionNumber.proj" Condition="$(Configuration)=='Release'" StopOnFirstFailure="true" Targets="SetVersionNumber" />
-
-    <!-- Build framework and common plug-ins. -->
+    <!-- Build project. -->
     <MSBuild	Projects="Build.proj" StopOnFirstFailure="true" Targets="Build" />
 
-    <!-- Revert the revision number. -->
-    <MSBuild	Projects="RevertVersionNumber.proj" Condition="$(Configuration)=='Release'" StopOnFirstFailure="true" Targets="RevertVersionNumber" />
-
-    <!-- Copy SAF files to delivery. -->
-    <MSBuild	Projects="CopyToDelivery.proj" StopOnFirstFailure="true" Targets="CopyToDelivery" Properties="TargetVersion=$(TargetVersion)"/>
+    <!-- Copy binaries to delivery. -->
+    <MSBuild	Projects="CopyToDelivery.proj" StopOnFirstFailure="true" Targets="CopyToDelivery"/>
 
   </Target>
 
-  
 </Project>
