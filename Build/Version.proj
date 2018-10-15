@@ -2,7 +2,7 @@
 <Project DefaultTargets="" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.5">
 
   <PropertyGroup>
-    <ProductVersion>3.0.0</ProductVersion>
+    <ProductVersion>3.0.1</ProductVersion>
     <BetaFlag></BetaFlag>
   </PropertyGroup>
 
