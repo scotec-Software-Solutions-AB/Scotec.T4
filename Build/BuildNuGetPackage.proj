@@ -12,10 +12,6 @@
 
   <Target Name="BuildNuGetPackage" >
 
-    <PropertyGroup>
-      <ProductVersion>3.0.0</ProductVersion>
-    </PropertyGroup>
-
     <ItemGroup>
       <Assemblies Include="$(DeliveryDir)\*.dll"/>
       <Assemblies Include="$(DeliveryDir)\*.pdb"/>
