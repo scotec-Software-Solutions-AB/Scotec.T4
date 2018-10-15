@@ -181,18 +181,14 @@ namespace OMS.Ice.T4Generator
                     {
                         Console.Error.WriteLine( "\t{0}: {1}", diagnostic.Id, diagnostic.GetMessage() );
                     }
+                    throw new T4CompilerException("Compiler error.", failures.ToList(), code, codeFile );
                 }
-                else
-                {
-                    ms.Seek( 0, SeekOrigin.Begin );
 
-                    var assembly = AssemblyLoadContext.Default.LoadFromStream( ms );
+                ms.Seek( 0, SeekOrigin.Begin );
+                var assembly = AssemblyLoadContext.Default.LoadFromStream( ms );
 
-                    return assembly.GetType( codeBuilder.GeneratorType );
-                }
+                return assembly.GetType( codeBuilder.GeneratorType );
             }
-
-            return null;
         }
 
         private CodeCompiler GetCompiler( string templateDirectiveLanguage )
