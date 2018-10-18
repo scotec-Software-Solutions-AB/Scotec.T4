@@ -24,7 +24,7 @@
 
     <Copy SourceFiles="@(LicenseFiles)" DestinationFolder="$(NuGetTempDir)" />
 
-    <Exec Command='$(NuGet) pack "$(Spec)" -Verbosity detailed -Symbols -BasePath "$(NuGetTempDir)" -OutputDirectory "$(DeliveryDir)" -Version $(ProductVersion)$(BetaFlag)'/>
+    <Exec Command='$(NuGet) pack "$(Spec)" -Verbosity detailed -BasePath "$(NuGetTempDir)" -OutputDirectory "$(DeliveryDir)" -Version $(ProductVersion)$(BetaFlag)'/>
 
     <!-- Delete NuGet temp folder. -->
     <Exec Command="rd /S /Q $(NuGetTempDir)"/>
