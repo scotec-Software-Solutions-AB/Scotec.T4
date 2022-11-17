@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\CSCodeTemplate.txt" />
+    <None Remove="Resources\CSIncludeTemplate.txt" />
+    <None Remove="Resources\VBCodeTemplate.txt" />
+    <None Remove="Resources\VBIncludeTemplate.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.4.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="7.0.0" />
@@ -50,6 +57,13 @@
 
 	<ItemGroup>
 	  <Folder Include="Properties\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="Resources\CSCodeTemplate.txt" />
+	  <Content Include="Resources\CSIncludeTemplate.txt" />
+	  <Content Include="Resources\VBCodeTemplate.txt" />
+	  <Content Include="Resources\VBIncludeTemplate.txt" />
 	</ItemGroup>
 
 	<PropertyGroup>
