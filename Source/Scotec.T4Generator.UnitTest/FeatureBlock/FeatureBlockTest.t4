@@ -1,0 +1,17 @@
+﻿<#@ template language="C#" #>
+<#= TestFeature1() #>
+<#= TestFeature2() #>
+
+<#+
+
+string TestFeature1()
+{
+	return "11111";
+}
+string TestFeature2()
+{
+	return "22222";
+}
+
+#>
+
