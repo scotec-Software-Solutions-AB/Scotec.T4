@@ -32,7 +32,7 @@ jobs:
       run: dotnet restore ./Source/Scotec.T4Generator.sln
     - name: Build
       run: dotnet build --no-restore ./Source/Scotec.T4Generator.sln -c Release -p:Version=$GITVERSION_ASSEMBLYSEMVER -p:PackageVersion=$GITVERSION_SEMVER -p:CompanyName="scotec Software Solutions AB"
-    - name: Test
-      run: dotnet test --no-restore --no-build --verbosity normal ./Source/Scotec.T4Generator.sln
+ #   - name: Test
+ #     run: dotnet test --no-restore --no-build --verbosity normal ./Source/Scotec.T4Generator.sln
     - name: Push project
       run: dotnet nuget push **/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
