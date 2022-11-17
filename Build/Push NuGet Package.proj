@@ -13,9 +13,8 @@
       <NuGetFile>$(DeliveryDir)\OMS.Ice.$(ProductVersion)$(BetaFlag).nupkg</NuGetFile>
     </PropertyGroup>
 
-    <!--<Exec Command='$(NuGet) sources Add -Name "SAF" -Source "https://tfs2018.systecs.local/SYSTECS%20TA/_packaging/SAF/nuget/v3/index.json"'/>-->
-    <!--<Exec Command='$(NuGet) push -Source "SAF" -ApiKey VSTS $(NuGetFile)'/>-->
-    <Exec Command='$(NuGet) push -Source "nuget.org" $(NuGetFile)'/>
+    <!--<Exec Command='$(NuGet) push -Source "nuget.org" $(NuGetFile)'/>-->
+    <Exec Command='dotnet nuget push --source $(NuGetFile)'/>
 
   </Target>
 
