@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Scotec.T4Generator.Resources;
 using Scotec.T4Generator.Syntax;
 
 #endregion
