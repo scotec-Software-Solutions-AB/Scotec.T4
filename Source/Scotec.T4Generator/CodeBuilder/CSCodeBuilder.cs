@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Scotec.T4Generator.Properties;
+using Scotec.T4Generator.Resources;
 using Scotec.T4Generator.Syntax;
 
 #endregion
@@ -15,12 +15,12 @@ namespace Scotec.T4Generator.CodeBuilder
     {
         protected override string GetCodeTemplate()
         {
-            return Resources.CSCodeTemplate;
+            return Templates.CSCodeTemplate;
         }
 
         protected override string GetIncludeTemplate()
         {
-            return Resources.CSIncludeTemplate;
+            return Templates.CSIncludeTemplate;
         }
 
         protected override string CreateImports( IEnumerable<string> imports )

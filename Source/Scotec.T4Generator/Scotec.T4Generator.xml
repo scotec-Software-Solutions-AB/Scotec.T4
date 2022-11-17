@@ -169,23 +169,23 @@
                 import, include, parameters, and template directives.
             </summary>
         </member>
-        <member name="T:Scotec.T4Generator.Properties.Resources">
+        <member name="T:Scotec.T4Generator.Resources.Templates">
             <summary>
               A strongly-typed resource class, for looking up localized strings, etc.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Properties.Resources.ResourceManager">
+        <member name="P:Scotec.T4Generator.Resources.Templates.ResourceManager">
             <summary>
               Returns the cached ResourceManager instance used by this class.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Properties.Resources.Culture">
+        <member name="P:Scotec.T4Generator.Resources.Templates.Culture">
             <summary>
               Overrides the current thread's CurrentUICulture property for all
               resource lookups using this strongly typed resource class.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Properties.Resources.CSCodeTemplate">
+        <member name="P:Scotec.T4Generator.Resources.Templates.CSCodeTemplate">
              <summary>
                Looks up a localized string similar to &lt;%imports%&gt;
             
@@ -212,7 +212,7 @@
             }.
              </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Properties.Resources.CSIncludeTemplate">
+        <member name="P:Scotec.T4Generator.Resources.Templates.CSIncludeTemplate">
              <summary>
                Looks up a localized string similar to 
             		private void &lt;%templatename%&gt;TemplateMethod( &lt;%parameters%&gt;)
@@ -221,7 +221,7 @@
             		}.
              </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Properties.Resources.VBCodeTemplate">
+        <member name="P:Scotec.T4Generator.Resources.Templates.VBCodeTemplate">
              <summary>
                Looks up a localized string similar to &lt;%imports%&gt;
             
@@ -249,7 +249,7 @@
             End Namespace.
              </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Properties.Resources.VBIncludeTemplate">
+        <member name="P:Scotec.T4Generator.Resources.Templates.VBIncludeTemplate">
              <summary>
                Looks up a localized string similar to 
             		Private Sub &lt;%templatename%&gt;TemplateMethod( &lt;%parameters%&gt;)
