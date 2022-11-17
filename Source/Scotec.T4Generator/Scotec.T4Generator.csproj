@@ -46,17 +46,17 @@
 		<Authors>$(CompanyName)</Authors>
 		<Company>$(CompanyName)</Company>
 		<Copyright>$(CompanyName)</Copyright>
-		<Description>Helpful Linq extensions.</Description>
+		<Description>Runtime T4-Generator</Description>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPublishable>True</IsPublishable>
 		<PackageIcon>Logo.png</PackageIcon>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://www.scotec-software.com</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<RepositoryUrl>https://github.com/scotec-Software-Solutions-AB/scotec_ssc</RepositoryUrl>
+		<RepositoryUrl>https://github.com/olmeyer/OMS.Ice</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<SignAssembly>False</SignAssembly>
-		<Title>Scotec.Extensions.Linq</Title>
+		<Title>Scotec.T4Generator</Title>
 	</PropertyGroup>
 
 </Project>
