@@ -4,3 +4,4 @@ bin
 obj
 /packages
 /Source/*.user
+/Source/Scotec.T4Generator/*.user
