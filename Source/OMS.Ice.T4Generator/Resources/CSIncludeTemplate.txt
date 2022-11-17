@@ -1,5 +1,0 @@
-﻿
-		private void <%templatename%>TemplateMethod( <%parameters%>)
-		{
-<%include%>
-		}

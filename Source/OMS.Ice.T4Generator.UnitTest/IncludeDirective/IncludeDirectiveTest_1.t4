@@ -1,4 +1,0 @@
-﻿<#@ template language="C#" #>
-BEFORE INCLUDE
-<#@ include file="IncludeDirectiveTest_1_1.t4" #>
-AFTER INCLUDE

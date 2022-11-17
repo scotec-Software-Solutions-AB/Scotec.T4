@@ -1,6 +1,0 @@
-﻿<#@ template language="C#" #>
-<# 
-int aaa = 3; 
-#>
-<#@ include file="IncludeDirectiveTest_3_1.t4" mode="method" #>
-AFTER INCLUDE
