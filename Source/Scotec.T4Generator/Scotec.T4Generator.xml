@@ -195,12 +195,12 @@
             	{
             &lt;%fields%&gt;
             
-            		public &lt;%classname%&gt;(&lt;%parameters%&gt;)
+            		public &lt;%classname%&gt;(string endOfLine&lt;%parameters%&gt;) : base(endOfLine)
             		{
             &lt;%fieldinitializations%&gt;
             		}
             		
-            		public override void Generate()
+            		protected override void Generate()
             		{
             &lt;%implementation%&gt;
             		}
@@ -232,11 +232,12 @@
             
             &lt;%fields%&gt;
             
-            		Public Sub New(&lt;%parameters%&gt;)
+            		Public Sub New(ByVal endOfLine as String&lt;%parameters%&gt;)
+            			MyBase.New(endOfLine)
             &lt;%fieldinitializations%&gt;
             		End Sub
             		
-            		Public Overrides Sub Generate()
+            		Protected Overrides Sub Generate()
             &lt;%implementation%&gt;
             		End Sub
             
