@@ -1,8 +1,7 @@
-﻿namespace Scotec.T4Generator.Syntax
+﻿namespace Scotec.T4Generator.Syntax;
+
+internal enum IncludeMode
 {
-    internal enum IncludeMode
-    {
-        Inline,
-        Method
-    }
+    Inline,
+    Method
 }

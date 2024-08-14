@@ -5,15 +5,13 @@ using Scotec.T4Generator.Syntax;
 
 #endregion
 
+namespace Scotec.T4Generator;
 
-namespace Scotec.T4Generator
+internal class ParserResult
 {
-    internal class ParserResult
-    {
-        public IEnumerable<Part> Parts { get; set; }
+    public IEnumerable<Part> Parts { get; set; }
 
-        public IDictionary<IncludeDirective, IEnumerable<Part>> IncludedTemplates { get; set; }
+    public IDictionary<IncludeDirective, IEnumerable<Part>> IncludedTemplates { get; set; }
 
-        public string TemplateName { get; set; }
-    }
+    public string TemplateName { get; set; }
 }

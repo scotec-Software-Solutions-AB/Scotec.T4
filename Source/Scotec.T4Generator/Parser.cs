@@ -9,198 +9,199 @@ using Scotec.T4Generator.Syntax;
 
 #endregion
 
+namespace Scotec.T4Generator;
 
-namespace Scotec.T4Generator
+internal class Parser
 {
-    internal class Parser
+    private static readonly Regex LineEndings = new("(\r\n|\n\r|\n|\r|\u0085|\u000C|\u2028|\u2029)", RegexOptions.Compiled);
+    private static readonly Regex Identifier = new(@"[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Nl}\p{Mn}\p{Mc}\p{Cf}\p{Pc}\p{Lm}]", RegexOptions.Compiled);
+
+    public Parser(IGeneratorSettings settings)
     {
-        private static readonly Regex LineEndings = new Regex( "(\r\n|\n\r|\n|\r|\u0085|\u000C|\u2028|\u2029)", RegexOptions.Compiled );
-        private static readonly Regex Identifier = new Regex( @"[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Nl}\p{Mn}\p{Mc}\p{Cf}\p{Pc}\p{Lm}]", RegexOptions.Compiled );
+        Settings = settings;
+    }
 
-        public Parser( IGeneratorSettings settings )
-        {
-            Settings = settings;
-        }
+    private string TemplateFile { get; set; }
+    public int[] Lines { get; private set; }
+    private string TemplatePath { get; set; }
+    private IGeneratorSettings Settings { get; }
 
+    public ParserResult Parse(string templateFile, string templatePath)
+    {
+        var result = new ParserResult { IncludedTemplates = new Dictionary<IncludeDirective, IEnumerable<Part>>() };
+        result.Parts = Parse(templateFile, templatePath, result.IncludedTemplates);
+        result.TemplateName = MakeIdentifier(Path.GetFileNameWithoutExtension(TemplateFile));
 
-        private string TemplateFile { get; set; }
-        public int[] Lines { get; private set; }
-        private string TemplatePath { get; set; }
-        private IGeneratorSettings Settings { get; }
+        return result;
+    }
 
+    private string MakeIdentifier(string possibleIdentifier)
+    {
+        return Identifier.Replace(possibleIdentifier, "_");
+    }
 
-        public ParserResult Parse( string templateFile, string templatePath )
-        {
-            var result = new ParserResult {IncludedTemplates = new Dictionary<IncludeDirective, IEnumerable<Part>>()};
-            result.Parts = Parse( templateFile, templatePath, result.IncludedTemplates );
-            result.TemplateName = MakeIdentifier( Path.GetFileNameWithoutExtension( TemplateFile ) );
+    private IEnumerable<Part> Parse(string templateFile, string templatePath,
+                                    IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
+    {
+        TemplatePath = string.IsNullOrEmpty(templatePath) ? Path.GetDirectoryName(templateFile) : templatePath;
+        TemplateFile = MakePathAbsolute(templateFile);
 
-            return result;
-        }
+        var stream = File.OpenText(TemplateFile);
 
-        private string MakeIdentifier( string possibleIdentifier )
-        {
-            return Identifier.Replace( possibleIdentifier, "_" );
-        }
+        // Read the content and convert all types of line endings to LF
+        var content = LineEndings.Replace(stream.ReadToEnd(), "\n");
 
-        private IEnumerable<Part> Parse( string templateFile, string templatePath,
-            IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates )
-        {
-            TemplatePath = string.IsNullOrEmpty( templatePath ) ? Path.GetDirectoryName( templateFile ) : templatePath;
-            TemplateFile = MakePathAbsolute( templateFile );
+        // It is not possible to print a backslash '\' before the opening tag '<=' because the regex interprets
+        // a backslash as an escape character. Escaping the escape character would result in a very complex regex.
+        // Therefore replace the escaped backslash by an expression block containing a backslash as string.
+        // '\\<# ... #>! results in '<#= "\\" #><# ... #>'
+        content = content.Replace(@"\\<#", @"<#= @""\"" #><#");
 
-            var stream = File.OpenText( TemplateFile );
+        stream.Close();
 
-            // Read the content and convert all types of line endings to LF
-            var content = LineEndings.Replace( stream.ReadToEnd(), "\n" );
+        Lines = GetLines(content);
 
-            // It is not possible to print a backslash '\' before the opening tag '<=' because the regex interprets
-            // a backslash as an escape character. Escaping the escape character would result in a very complex regex.
-            // Therefore replace the escaped backslash by an expression block containing a backslash as string.
-            // '\\<# ... #>! results in '<#= "\\" #><# ... #>'
-            content = content.Replace( @"\\<#", @"<#= @""\"" #><#" );
+        var parts = new List<Part>();
+        ReadExpressions(parts, content);
 
-            stream.Close();
+        ReadTextBlocks(parts, content);
 
-            Lines = GetLines( content );
+        ReadIncludes(parts, includedTemplates);
 
-            var parts = new List<Part>();
-            ReadExpressions( parts, content );
+        // Sort all parts 
+        parts = (from p in parts
+                 orderby p.Index
+                 select p).ToList();
 
-            ReadTextBlocks( parts, content );
+        return parts;
+    }
 
-            ReadIncludes( parts, includedTemplates );
-
-            // Sort all parts 
-            parts = (from p in parts
-                orderby p.Index
-                select p).ToList();
-
-            return parts;
-        }
-
-        private static int[] GetLines( string content )
-        {
-            return (from Match match in new Regex( @".*(\n|.$)" ).Matches( content )
+    private static int[] GetLines(string content)
+    {
+        return (from Match match in new Regex(@".*(\n|.$)").Matches(content)
                 select match.Index).ToArray();
-        }
+    }
 
+    private void ReadTextBlocks(ICollection<Part> parts, string content)
+    {
+        var sorted = (from p in parts
+                      orderby p.Index
+                      select p).ToList();
 
-        private void ReadTextBlocks( ICollection<Part> parts, string content )
+        var readIndex = 0;
+
+        foreach (var part in sorted)
         {
-            var sorted = (from p in parts
-                orderby p.Index
-                select p).ToList();
-
-            var readIndex = 0;
-
-            foreach( var part in sorted )
+            if (readIndex < part.Index)
             {
-                if( readIndex < part.Index )
-                {
-                    parts.Add( CreateTextBlock( readIndex, content.Substring( readIndex, part.Index - readIndex ) ) );
-                }
-
-                readIndex = part.Index + part.Length;
+                parts.Add(CreateTextBlock(readIndex, content.Substring(readIndex, part.Index - readIndex)));
             }
 
-            if( readIndex < content.Length )
-                parts.Add( CreateTextBlock( readIndex, content.Substring( readIndex ) ) );
+            readIndex = part.Index + part.Length;
         }
 
-        private TextBlock CreateTextBlock( int position, string content )
+        if (readIndex < content.Length)
         {
-            return new TextBlock( position, content ) {Line = GetLineFromPosition( position ), Source = TemplateFile};
+            parts.Add(CreateTextBlock(readIndex, content.Substring(readIndex)));
         }
+    }
 
-        private void ReadExpressions( List<Part> parts, string content )
+    private TextBlock CreateTextBlock(int position, string content)
+    {
+        return new TextBlock(position, content) { Line = GetLineFromPosition(position), Source = TemplateFile };
+    }
+
+    private void ReadExpressions(List<Part> parts, string content)
+    {
+        var syntax = new T4Syntax();
+
+        foreach (var expression in syntax.Expressions)
         {
-            var syntax = new T4Syntax();
-
-            foreach( var expression in syntax.Expressions )
-                Parse( parts, expression.Key, expression.Value, content );
+            Parse(parts, expression.Key, expression.Value, content);
         }
+    }
 
-
-        private void Parse( ICollection<Part> parts, Expression type, Regex syntax, string content )
+    private void Parse(ICollection<Part> parts, Expression type, Regex syntax, string content)
+    {
+        foreach (Match match in syntax.Matches(content))
         {
-            foreach( Match match in syntax.Matches( content ) )
+            Part part;
+            switch (type)
             {
-                Part part;
-                switch( type )
-                {
-                    case Expression.Directive:
-                        part = DirectiveFactory.CreateDirective( match, new MacroResolver( Settings ) );
-                        break;
-                    case Expression.Comment:
-                        part = new CommentDirective( match );
-                        break;
-                    case Expression.StandardControlBlock:
-                        part = new StandardControlBlock( match );
-                        break;
-                    case Expression.ExpressionControlBlock:
-                        part = new ExpressionControlBlock( match );
-                        break;
-                    case Expression.FeatureControlBlock:
-                        part = new FeatureControlBlock( match );
-                        break;
-                    default:
-                        part = null;
-                        break;
-                }
+                case Expression.Directive:
+                    part = DirectiveFactory.CreateDirective(match, new MacroResolver(Settings));
+                    break;
+                case Expression.Comment:
+                    part = new CommentDirective(match);
+                    break;
+                case Expression.StandardControlBlock:
+                    part = new StandardControlBlock(match);
+                    break;
+                case Expression.ExpressionControlBlock:
+                    part = new ExpressionControlBlock(match);
+                    break;
+                case Expression.FeatureControlBlock:
+                    part = new FeatureControlBlock(match);
+                    break;
+                default:
+                    part = null;
+                    break;
+            }
 
-                if( part != null )
-                {
-                    part.Line = GetLineFromPosition( part.Position );
-                    part.Source = TemplateFile;
-                    parts.Add( part );
-                }
+            if (part != null)
+            {
+                part.Line = GetLineFromPosition(part.Position);
+                part.Source = TemplateFile;
+                parts.Add(part);
             }
         }
+    }
 
-        private void ReadIncludes( IEnumerable<Part> parts, IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates )
+    private void ReadIncludes(IEnumerable<Part> parts, IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
+    {
+        var includes = (from p in parts
+                        where p is IncludeDirective
+                        select (IncludeDirective)p).ToList();
+
+        foreach (var include in includes)
         {
-            var includes = (from p in parts
-                where p is IncludeDirective
-                select (IncludeDirective)p).ToList();
+            var parser = new Parser(Settings);
+            //var fullPath = MakePathAbsolute( include.File );
+            //var templateName = Path.GetFileNameWithoutExtension( fullPath );
+            //if( templateName == null )
+            //    throw new T4Exception( "Invalid template file name." );
 
-            foreach( var include in includes )
+            //if((from i in includedTemplates.Keys where i.Name == templateName select i).Any())
+            if (includedTemplates.ContainsKey(include))
             {
-                var parser = new Parser( Settings );
-                //var fullPath = MakePathAbsolute( include.File );
-                //var templateName = Path.GetFileNameWithoutExtension( fullPath );
-                //if( templateName == null )
-                //    throw new T4Exception( "Invalid template file name." );
-
-                //if((from i in includedTemplates.Keys where i.Name == templateName select i).Any())
-                if( includedTemplates.ContainsKey( include ) )
-                    continue;
-
-                // Add the key but do not assign a value. We need the key as a break condition in subsequent calls to ReadIncludes().
-                includedTemplates.Add( include, null );
-                var includedParts = parser.Parse( include.File, TemplatePath, includedTemplates ).ToArray();
-                includedTemplates[include] = includedParts;
-
-                ReadIncludes( includedParts, includedTemplates );
+                continue;
             }
+
+            // Add the key but do not assign a value. We need the key as a break condition in subsequent calls to ReadIncludes().
+            includedTemplates.Add(include, null);
+            var includedParts = parser.Parse(include.File, TemplatePath, includedTemplates).ToArray();
+            includedTemplates[include] = includedParts;
+
+            ReadIncludes(includedParts, includedTemplates);
         }
+    }
 
-
-        private int GetLineFromPosition( int position )
-        {
-            return Array.IndexOf( Lines, (from l in Lines
+    private int GetLineFromPosition(int position)
+    {
+        return Array.IndexOf(Lines, (from l in Lines
                                      where l <= position
-                                     select l).Last() ) + 1;
-        }
+                                     select l).Last()) + 1;
+    }
 
-        private string MakePathAbsolute( string path )
+    private string MakePathAbsolute(string path)
+    {
+        if (Path.IsPathRooted(path))
         {
-            if( Path.IsPathRooted( path ) )
-                return path;
-
-            var newPath = new Uri( Path.Combine( TemplatePath, path ) );
-
-            return newPath.LocalPath;
+            return path;
         }
+
+        var newPath = new Uri(Path.Combine(TemplatePath, path));
+
+        return newPath.LocalPath;
     }
 }

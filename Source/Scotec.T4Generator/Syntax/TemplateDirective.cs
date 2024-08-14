@@ -4,20 +4,18 @@ using System.Text.RegularExpressions;
 
 #endregion
 
+namespace Scotec.T4Generator.Syntax;
 
-namespace Scotec.T4Generator.Syntax
+internal class TemplateDirective : Directive
 {
-    internal class TemplateDirective : Directive
+    public TemplateDirective(Match match, MacroResolver macroResolver)
+        : base(match, macroResolver)
     {
-        public TemplateDirective( Match match, MacroResolver macroResolver )
-            : base( match, macroResolver )
-        {
-        }
-
-        public string Language => Attributes.TryGetValue( "language", out var language ) ? language : "C#";
-
-        public string ClassName => Attributes.TryGetValue( "classname", out var className ) ? className : string.Empty;
-
-        public string CodeFile => Attributes.TryGetValue( "codefile", out var codeFile ) ? codeFile : string.Empty;
     }
+
+    public string Language => Attributes.TryGetValue("language", out var language) ? language : "C#";
+
+    public string ClassName => Attributes.TryGetValue("classname", out var className) ? className : string.Empty;
+
+    public string CodeFile => Attributes.TryGetValue("codefile", out var codeFile) ? codeFile : string.Empty;
 }

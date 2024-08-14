@@ -4,35 +4,33 @@ using System.Text.RegularExpressions;
 
 #endregion
 
+namespace Scotec.T4Generator.Syntax;
 
-namespace Scotec.T4Generator.Syntax
+internal class FeatureControlBlock : Part
 {
-    internal class FeatureControlBlock : Part
+    public FeatureControlBlock(Match match)
     {
-        public FeatureControlBlock( Match match )
+        Match = match;
+
+        if (match.Groups["content"].Captures.Count > 0)
         {
-            Match = match;
+            var capture = match.Groups["content"].Captures[0];
 
-            if( match.Groups["content"].Captures.Count > 0 )
-            {
-                var capture = match.Groups["content"].Captures[0];
-
-                Content = capture.Value;
-                Position = capture.Index;
-            }
+            Content = capture.Value;
+            Position = capture.Index;
         }
-
-        protected Match Match { get; }
-
-        public override int Index => Match.Index;
-
-        public override int Position { get; }
-
-        /// <summary>
-        ///     Returns the lengths of the regex match. To get the lenght of the content, use Content.Lenght.
-        /// </summary>
-        public override int Length => Match.Length;
-
-        public string Content { get; }
     }
+
+    protected Match Match { get; }
+
+    public override int Index => Match.Index;
+
+    public override int Position { get; }
+
+    /// <summary>
+    ///     Returns the lengths of the regex match. To get the lenght of the content, use Content.Lenght.
+    /// </summary>
+    public override int Length => Match.Length;
+
+    public string Content { get; }
 }

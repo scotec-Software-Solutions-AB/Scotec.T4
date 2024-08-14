@@ -155,7 +155,7 @@
         </member>
         <member name="P:Scotec.T4Generator.IGeneratorSettings.Options">
             <summary>
-                Returns a dictionary with CodeDomProvider specific options. 
+                Returns a dictionary with CodeDomProvider specific options.
             </summary>
         </member>
         <member name="P:Scotec.T4Generator.IGeneratorSettings.EndOfLine">
@@ -206,13 +206,13 @@
         </member>
         <member name="M:Scotec.T4Generator.T4Generator.#ctor(System.String)">
             <summary>
-            Contructor
+                Contructor
             </summary>
             <param name="endOfLine">The line ending used for the generated text.</param>
         </member>
         <member name="P:Scotec.T4Generator.T4Generator.EndOfLine">
             <summary>
-            The line ending used for the generated text.
+                The line ending used for the generated text.
             </summary>
         </member>
         <member name="P:Scotec.T4Generator.T4Generator.Output">

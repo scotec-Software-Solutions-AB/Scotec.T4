@@ -4,18 +4,16 @@ using System.Text.RegularExpressions;
 
 #endregion
 
+namespace Scotec.T4Generator.Syntax;
 
-namespace Scotec.T4Generator.Syntax
+internal class ParameterDirective : Directive
 {
-    internal class ParameterDirective : Directive
+    public ParameterDirective(Match match, MacroResolver macroResolver)
+        : base(match, macroResolver)
     {
-        public ParameterDirective( Match match, MacroResolver macroResolver )
-            : base( match, macroResolver )
-        {
-        }
-
-        public string Name => Attributes["name"];
-
-        public string Type => Attributes["type"];
     }
+
+    public string Name => Attributes["name"];
+
+    public string Type => Attributes["type"];
 }
