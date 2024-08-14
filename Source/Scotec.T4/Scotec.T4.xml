@@ -1,72 +1,72 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>Scotec.T4Generator</name>
+        <name>Scotec.T4</name>
     </assembly>
     <members>
-        <member name="T:Scotec.T4Generator.EndOfLine">
+        <member name="T:Scotec.T4.EndOfLine">
             <summary>
                 Specifies the type of line breaks for the generated text output.
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.CRLF">
+        <member name="F:Scotec.T4.EndOfLine.CRLF">
             <summary>
                 Microsoft Windows, DEC TOPS-10, RT-11 and most other early non-Unix and non-IBM OSes, CP/M, MP/M, DOS (MS-DOS,
                 PC-DOS, etc.), Atari TOS, OS/2, Symbian OS, Palm OSCrLf,
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.LFCR">
+        <member name="F:Scotec.T4.EndOfLine.LFCR">
             <summary>
                 Acorn BBC and RISC OS spooled text output.
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.CR">
+        <member name="F:Scotec.T4.EndOfLine.CR">
             <summary>
                 Commodore 8-bit machines, Acorn BBC, TRS-80, Apple II family, Mac OS up to version 9 and OS-9
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.LF">
+        <member name="F:Scotec.T4.EndOfLine.LF">
             <summary>
                 Multics, Unix and Unix-like systems (GNU/Linux, Mac OS X, FreeBSD, AIX, Xenix, etc.), BeOS, Amiga, RISC OS and
                 others.
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.NEL">
+        <member name="F:Scotec.T4.EndOfLine.NEL">
             <summary>
                 Next line (Unicode U+0085)
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.LS">
+        <member name="F:Scotec.T4.EndOfLine.LS">
             <summary>
                 Line separator (Unicode U+2028)
             </summary>
         </member>
-        <member name="F:Scotec.T4Generator.EndOfLine.PS">
+        <member name="F:Scotec.T4.EndOfLine.PS">
             <summary>
                 Paragraph separator (Unicode U+2029)
             </summary>
         </member>
-        <member name="T:Scotec.T4Generator.Generator">
+        <member name="T:Scotec.T4.Generator">
             <summary>
                 The Generator class. This class implements the IGenerator interface.
             </summary>
         </member>
-        <member name="M:Scotec.T4Generator.Generator.#ctor">
+        <member name="M:Scotec.T4.Generator.#ctor">
             <summary>
                 Constructor.
             </summary>
         </member>
-        <member name="T:Scotec.T4Generator.IGenerator">
+        <member name="T:Scotec.T4.IGenerator">
             <summary>
                 T4 text template generator interface.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.IGenerator.Settings">
+        <member name="P:Scotec.T4.IGenerator.Settings">
             <summary>
                 Gets the generator settings.
             </summary>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.GenerateToFile(System.String,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.String,System.Object[])">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -74,7 +74,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.GenerateToFile(System.String,System.Boolean,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Boolean,System.String,System.Object[])">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -83,7 +83,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.GenerateToFile(System.String,System.Text.Encoding,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Text.Encoding,System.String,System.Object[])">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -92,7 +92,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.GenerateToFile(System.String,System.Boolean,System.Text.Encoding,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Boolean,System.Text.Encoding,System.String,System.Object[])">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -102,7 +102,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.Generate(System.String,System.IO.TextWriter,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.Generate(System.String,System.IO.TextWriter,System.Object[])">
             <summary>
                 Generates textual output for the given template into a text writer.
             </summary>
@@ -110,7 +110,7 @@
             <param name="output"> The target text writer. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.Generate(System.String,System.Boolean,System.IO.TextWriter,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.Generate(System.String,System.Boolean,System.IO.TextWriter,System.Object[])">
             <summary>
                 Generates textual output for the given template into a text writer.
             </summary>
@@ -119,7 +119,7 @@
             <param name="output"> The target text writer. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.Compile(System.Collections.Generic.IEnumerable{System.String})">
+        <member name="M:Scotec.T4.IGenerator.Compile(System.Collections.Generic.IEnumerable{System.String})">
             <summary>
                 Asynchronously precompiles a list of templates without generating text. You don't have to wait until this method
                 has finished. You can start generating text immediately.
@@ -127,7 +127,7 @@
             <param name="templates"> A list of templates to precompile. </param>
             <returns> Return a Task object. This can be used to wait until the compilation has finished. </returns>
         </member>
-        <member name="M:Scotec.T4Generator.IGenerator.Compile(System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+        <member name="M:Scotec.T4.IGenerator.Compile(System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
             <summary>
                 Asynchronously precompiles a list of templates without generating text. You don't have to wait until this method
                 has finished. You can start generating text immediately.
@@ -136,107 +136,107 @@
             <param name="noCache">The generator always creates and loads a new assembly for the given template</param>
             <returns> Return a Task object. This can be used to wait until the compilation has finished. </returns>
         </member>
-        <member name="T:Scotec.T4Generator.IGeneratorSettings">
+        <member name="T:Scotec.T4.IGeneratorSettings">
             <summary>
                 Generator settings interface.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.IGeneratorSettings.ReferencePaths">
+        <member name="P:Scotec.T4.IGeneratorSettings.ReferencePaths">
             <summary>
                 Gets a list of reference paths. A reference path will be used to relolve assembly references. You can your
                 application specific reference paths to the list.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.IGeneratorSettings.ReferenceAssemblies">
+        <member name="P:Scotec.T4.IGeneratorSettings.ReferenceAssemblies">
             <summary>
                 Gets a list of referenced assemblies. Typically, assemblies will be referenced in the assembly directive of a T4
                 template. However, you can add additional assemblies to this list.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.IGeneratorSettings.Options">
+        <member name="P:Scotec.T4.IGeneratorSettings.Options">
             <summary>
                 Returns a dictionary with CodeDomProvider specific options.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.IGeneratorSettings.EndOfLine">
+        <member name="P:Scotec.T4.IGeneratorSettings.EndOfLine">
             <summary>
                 Gets or sets the line break characters for the generated textual output. Default is LineEnding.CrLf.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.IGeneratorSettings.TemplateParameters">
+        <member name="P:Scotec.T4.IGeneratorSettings.TemplateParameters">
             <summary>
                 Gets or sets a dictionary containing key/value pairs that can be used as variables used in assembly,
                 import, include, parameters, and template directives.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.Syntax.FeatureControlBlock.Length">
+        <member name="P:Scotec.T4.Syntax.FeatureControlBlock.Length">
             <summary>
                 Returns the lengths of the regex match. To get the lenght of the content, use Content.Lenght.
             </summary>
         </member>
-        <member name="T:Scotec.T4Generator.T4CompilerException">
+        <member name="T:Scotec.T4.T4CompilerException">
             <summary>
                 The exception that is thrown when the compilation of the generated code fails.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.T4CompilerException.Errors">
+        <member name="P:Scotec.T4.T4CompilerException.Errors">
             <summary>
                 Gets the list of compiler errors.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.T4CompilerException.GeneratedCode">
+        <member name="P:Scotec.T4.T4CompilerException.GeneratedCode">
             <summary>
                 Gets the generated code that could not be compiled.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.T4CompilerException.CodeBehind">
+        <member name="P:Scotec.T4.T4CompilerException.CodeBehind">
             <summary>
                 Gets the subsidiary code that has been referenced in the template directive.
             </summary>
         </member>
-        <member name="T:Scotec.T4Generator.T4Exception">
+        <member name="T:Scotec.T4.T4Exception">
             <summary>
                 The exception that is thrown when the text generation fails.
             </summary>
         </member>
-        <member name="T:Scotec.T4Generator.T4Generator">
+        <member name="T:Scotec.T4.T4Generator">
             <summary>
                 Base class for the generated classes. This class should be used by the generator only.
             </summary>
         </member>
-        <member name="M:Scotec.T4Generator.T4Generator.#ctor(System.String)">
+        <member name="M:Scotec.T4.T4Generator.#ctor(System.String)">
             <summary>
-                Contructor
+                Constructor
             </summary>
             <param name="endOfLine">The line ending used for the generated text.</param>
         </member>
-        <member name="P:Scotec.T4Generator.T4Generator.EndOfLine">
+        <member name="P:Scotec.T4.T4Generator.EndOfLine">
             <summary>
                 The line ending used for the generated text.
             </summary>
         </member>
-        <member name="P:Scotec.T4Generator.T4Generator.Output">
+        <member name="P:Scotec.T4.T4Generator.Output">
             <summary>
                 The TextWriter can be used in the template code to write textual data directly into the output.
             </summary>
         </member>
-        <member name="M:Scotec.T4Generator.T4Generator.Generate(System.IO.TextWriter)">
+        <member name="M:Scotec.T4.T4Generator.Generate(System.IO.TextWriter)">
             <summary>
                 Generates the textual output. This method will be called by the template generator.
             </summary>
             <param name="output"> The target stream. </param>
         </member>
-        <member name="M:Scotec.T4Generator.T4Generator.Generate">
+        <member name="M:Scotec.T4.T4Generator.Generate">
             <summary>
                 Used by the T4 text template generator.
             </summary>
         </member>
-        <member name="M:Scotec.T4Generator.T4Generator.Write(System.String)">
+        <member name="M:Scotec.T4.T4Generator.Write(System.String)">
             <summary>
                 Used by the T4 text template generator. Can be also called in the code part of the template.
             </summary>
         </member>
-        <member name="M:Scotec.T4Generator.T4Generator.Write(System.Object)">
+        <member name="M:Scotec.T4.T4Generator.Write(System.Object)">
             <summary>
                 Used by the T4 text template generator. Can be also called in the code part of the template.
             </summary>

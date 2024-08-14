@@ -1,1 +1,1 @@
-﻿<#@ template language="C#" classname="Scotec.T4Generator.Test.Template.TemplateWithContainingMacrosTest" #>
+﻿<#@ template language="C#" classname="Scotec.T4.Test.Template.TemplateWithContainingMacrosTest" #>

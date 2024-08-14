@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
 	  <LangVersion>latest</LangVersion>
-    <DocumentationFile>Scotec.T4Generator.xml</DocumentationFile>
+    <DocumentationFile>Scotec.T4.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

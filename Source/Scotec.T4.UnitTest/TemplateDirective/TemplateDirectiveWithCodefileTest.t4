@@ -1,1 +1,1 @@
-﻿<#@ template language="C#" classname="Scotec.T4Generator.Test.TemplateDirective.TemplateDirectiveWithCodefileTest" codefile="TemplateDirectiveWithCodefileTest.t4.cs"#>
+﻿<#@ template language="C#" classname="Scotec.T4.Test.TemplateDirective.TemplateDirectiveWithCodefileTest" codefile="TemplateDirectiveWithCodefileTest.t4.cs"#>

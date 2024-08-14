@@ -56,14 +56,14 @@ internal abstract class CodeBuilder
         if (string.IsNullOrEmpty(fullName))
         {
             ClassName = ParserResult.TemplateName;
-            Namespace = "Scotec.T4Generator";
+            Namespace = "Scotec.T4";
         }
         else
         {
             var index = fullName.LastIndexOf('.');
 
             ClassName = fullName.Substring(index + 1);
-            Namespace = index >= 0 ? fullName.Substring(0, index) : "Scotec.T4Generator";
+            Namespace = index >= 0 ? fullName.Substring(0, index) : "Scotec.T4";
         }
     }
 
@@ -113,7 +113,7 @@ internal abstract class CodeBuilder
 
         _code = _code.Replace("<%namespace%>", Namespace);
         _code = _code.Replace("<%classname%>", EscapedClassName);
-        _code = _code.Replace("<%baseclassname%>", "Scotec.T4Generator.T4Generator");
+        _code = _code.Replace("<%baseclassname%>", "Scotec.T4.T4Generator");
         _code = _code.Replace("<%imports%>", imports);
         _code = _code.Replace("<%fields%>", fields);
         _code = _code.Replace("<%parameters%>", parameters);

@@ -1,1 +1,1 @@
-﻿<#@ template language="C#" classname="%Macro1%.T4Generator.%Macro2%.TemplateDirective.%Macro3%" codefile="%Macro3%.t4.cs"#>
+﻿<#@ template language="C#" classname="%Macro1%.T4.%Macro2%.TemplateDirective.%Macro3%" codefile="%Macro3%.t4.cs"#>
