@@ -1,11 +1,11 @@
 ﻿#region
 
 using System.Collections.Generic;
-using Scotec.T4Generator.Syntax;
+using Scotec.T4.Syntax;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 internal class ParserResult
 {

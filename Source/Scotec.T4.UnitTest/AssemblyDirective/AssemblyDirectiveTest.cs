@@ -2,7 +2,7 @@
 
 using Xunit;
 
-namespace Scotec.T4Generator.UnitTest.AssemblyDirective
+namespace Scotec.T4.UnitTest.AssemblyDirective
 {
     public class AssemblyDirectiveTest : TestCase
     {

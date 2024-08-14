@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 #endregion
 
-namespace Scotec.T4Generator.Compiler;
+namespace Scotec.T4.Compiler;
 
 internal abstract class CodeCompiler
 {

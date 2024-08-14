@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 #endregion
 
-namespace Scotec.T4Generator.Compiler;
+namespace Scotec.T4.Compiler;
 
 internal class CSharpCompiler : CodeCompiler
 {

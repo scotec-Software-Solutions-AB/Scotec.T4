@@ -9,7 +9,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest
+namespace Scotec.T4.UnitTest
 {
     public abstract class TestCase : IDisposable
     {

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 #endregion
 
-namespace Scotec.T4Generator.Syntax;
+namespace Scotec.T4.Syntax;
 
 internal abstract class Directive : Part
 {

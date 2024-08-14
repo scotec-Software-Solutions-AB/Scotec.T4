@@ -16,7 +16,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis" Version="4.10.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <!--<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.1" />-->
     <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 
@@ -42,10 +41,10 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://www.scotec-software.com</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<RepositoryUrl>https://github.com/olmeyer/OMS.Ice</RepositoryUrl>
+		<RepositoryUrl>https://github.com/scotec-Software-Solutions-AB/Scotec.T4</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<SignAssembly>False</SignAssembly>
-		<Title>Scotec.T4Generator</Title>
+		<Title>Scotec.T4</Title>
 	</PropertyGroup>
 
 </Project>

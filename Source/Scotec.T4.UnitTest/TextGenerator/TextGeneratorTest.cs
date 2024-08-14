@@ -6,7 +6,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest.TextGenerator
+namespace Scotec.T4.UnitTest.TextGenerator
 {
     public class TextGeneratorTest : TestCase
     {

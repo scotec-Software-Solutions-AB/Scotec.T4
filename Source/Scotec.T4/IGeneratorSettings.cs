@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     Generator settings interface.

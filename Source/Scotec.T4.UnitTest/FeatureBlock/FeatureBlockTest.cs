@@ -5,7 +5,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest.FeatureBlock
+namespace Scotec.T4.UnitTest.FeatureBlock
 {
    public class FeatureBlockTest : TestCase
     {

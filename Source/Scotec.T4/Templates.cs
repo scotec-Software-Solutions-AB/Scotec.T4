@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 internal class Templates
 {

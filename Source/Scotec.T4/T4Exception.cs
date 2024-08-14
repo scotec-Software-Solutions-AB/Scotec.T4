@@ -4,7 +4,7 @@ using System;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     The exception that is thrown when the text generation fails.

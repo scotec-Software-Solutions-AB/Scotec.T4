@@ -1,4 +1,4 @@
-﻿namespace Scotec.T4Generator.Syntax;
+﻿namespace Scotec.T4.Syntax;
 
 internal class TextBlock : Part
 {

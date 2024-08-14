@@ -5,7 +5,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest.IncludeDirective
+namespace Scotec.T4.UnitTest.IncludeDirective
 {
     public class IncludeDirectiveTest : TestCase
     {

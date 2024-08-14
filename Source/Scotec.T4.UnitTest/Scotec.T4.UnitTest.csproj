@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Scotec.T4Generator\Scotec.T4Generator.csproj" />
+    <ProjectReference Include="..\Scotec.T4\Scotec.T4.csproj" />
   </ItemGroup>
 
   <ItemGroup>

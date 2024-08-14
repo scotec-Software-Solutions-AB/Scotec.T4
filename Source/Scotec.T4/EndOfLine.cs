@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     Specifies the type of line breaks for the generated text output.

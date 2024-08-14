@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 internal class MacroResolver
 {

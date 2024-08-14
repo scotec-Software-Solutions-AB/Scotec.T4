@@ -1,4 +1,4 @@
-﻿namespace Scotec.T4Generator.UnitTest.TemplateDirective
+﻿namespace Scotec.T4.UnitTest.TemplateDirective
 {
     public partial class TemplateDirectiveWithCodefileTest
     {

@@ -5,7 +5,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest.TemplateDirective
+namespace Scotec.T4.UnitTest.TemplateDirective
 {
     public class TemplateDirectiveTest : TestCase
     {

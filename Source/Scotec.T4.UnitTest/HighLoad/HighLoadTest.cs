@@ -9,7 +9,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest.HighLoad
+namespace Scotec.T4.UnitTest.HighLoad
 {
     public class HighLoadTest : TestCase
     {

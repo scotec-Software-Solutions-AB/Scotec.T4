@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     T4 text template generator interface.

@@ -9,13 +9,13 @@ using System.Runtime.Loader;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Scotec.T4Generator.CodeBuilder;
-using Scotec.T4Generator.Compiler;
-using Scotec.T4Generator.Syntax;
+using Scotec.T4.CodeBuilder;
+using Scotec.T4.Compiler;
+using Scotec.T4.Syntax;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     The Generator class. This class implements the IGenerator interface.

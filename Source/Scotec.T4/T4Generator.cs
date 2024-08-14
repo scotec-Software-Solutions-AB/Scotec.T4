@@ -5,7 +5,7 @@ using System.IO;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     Base class for the generated classes. This class should be used by the generator only.

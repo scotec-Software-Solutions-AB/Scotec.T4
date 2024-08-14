@@ -5,7 +5,7 @@ using Xunit;
 #endregion
 
 
-namespace Scotec.T4Generator.UnitTest.Settings
+namespace Scotec.T4.UnitTest.Settings
 {
     public class LineEndingsTest : TestCase
     {

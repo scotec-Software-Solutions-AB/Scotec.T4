@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 #endregion
 
-namespace Scotec.T4Generator;
+namespace Scotec.T4;
 
 /// <summary>
 ///     The exception that is thrown when the compilation of the generated code fails.

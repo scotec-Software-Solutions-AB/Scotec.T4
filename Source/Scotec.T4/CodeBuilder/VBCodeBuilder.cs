@@ -3,11 +3,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Scotec.T4Generator.Syntax;
+using Scotec.T4.Syntax;
 
 #endregion
 
-namespace Scotec.T4Generator.CodeBuilder;
+namespace Scotec.T4.CodeBuilder;
 
 internal class VBCodeBuilder : CodeBuilder
 {
