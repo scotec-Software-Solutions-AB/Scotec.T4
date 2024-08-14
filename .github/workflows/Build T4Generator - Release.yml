@@ -1,4 +1,4 @@
-name: Build T4Generator
+name: Build Scotec.T4
 
 on: [workflow_dispatch]
 
@@ -27,12 +27,12 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore ./Source/Scotec.T4Generator.sln
+      run: dotnet restore ./Source/Scotec.T4.sln
     - name: Build
-      run: dotnet build --no-restore ./Source/Scotec.T4Generator.sln -c Release -p:Version=$GITVERSION_ASSEMBLYSEMVER -p:PackageVersion=$GITVERSION_SEMVER -p:CompanyName="scotec Software Solutions AB"
+      run: dotnet build --no-restore ./Source/Scotec.T4.sln -c Release -p:Version=$GITVERSION_ASSEMBLYSEMVER -p:PackageVersion=$GITVERSION_SEMVER -p:CompanyName="scotec Software Solutions AB"
  #   - name: Test
- #     run: dotnet test --no-restore --no-build --verbosity normal ./Source/Scotec.T4Generator.sln
+ #     run: dotnet test --no-restore --no-build --verbosity normal ./Source/Scotec.T4.sln
     - name: Push project
       run: dotnet nuget push ./Source/**/*.nupkg -s https://api.nuget.org/v3/index.json -k ${{secrets.NUGET_API_KEY}} --skip-duplicate
