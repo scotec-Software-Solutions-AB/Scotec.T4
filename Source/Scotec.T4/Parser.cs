@@ -35,7 +35,7 @@ internal class Parser
         return result;
     }
 
-    private string MakeIdentifier(string possibleIdentifier)
+    private static string MakeIdentifier(string possibleIdentifier)
     {
         return Identifier.Replace(possibleIdentifier, "_");
     }
@@ -53,7 +53,7 @@ internal class Parser
 
         // It is not possible to print a backslash '\' before the opening tag '<=' because the regex interprets
         // a backslash as an escape character. Escaping the escape character would result in a very complex regex.
-        // Therefore replace the escaped backslash by an expression block containing a backslash as string.
+        // Therefore, replace the escaped backslash by an expression block containing a backslash as string.
         // '\\<# ... #>! results in '<#= "\\" #><# ... #>'
         content = content.Replace(@"\\<#", @"<#= @""\"" #><#");
 
@@ -125,28 +125,15 @@ internal class Parser
     {
         foreach (Match match in syntax.Matches(content))
         {
-            Part part;
-            switch (type)
+            Part part = type switch
             {
-                case Expression.Directive:
-                    part = DirectiveFactory.CreateDirective(match, new MacroResolver(Settings));
-                    break;
-                case Expression.Comment:
-                    part = new CommentDirective(match);
-                    break;
-                case Expression.StandardControlBlock:
-                    part = new StandardControlBlock(match);
-                    break;
-                case Expression.ExpressionControlBlock:
-                    part = new ExpressionControlBlock(match);
-                    break;
-                case Expression.FeatureControlBlock:
-                    part = new FeatureControlBlock(match);
-                    break;
-                default:
-                    part = null;
-                    break;
-            }
+                Expression.Directive => DirectiveFactory.CreateDirective(match, new MacroResolver(Settings)),
+                Expression.Comment => new CommentDirective(match),
+                Expression.StandardControlBlock => new StandardControlBlock(match),
+                Expression.ExpressionControlBlock => new ExpressionControlBlock(match),
+                Expression.FeatureControlBlock => new FeatureControlBlock(match),
+                _ => null
+            };
 
             if (part != null)
             {

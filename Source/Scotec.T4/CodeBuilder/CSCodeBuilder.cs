@@ -9,16 +9,16 @@ using Scotec.T4.Syntax;
 
 namespace Scotec.T4.CodeBuilder;
 
-internal class CSCodeBuilder : CodeBuilder
+internal class CsCodeBuilder : CodeBuilder
 {
     protected override string GetCodeTemplate()
     {
-        return Templates.CSCodeTemplate;
+        return Templates.CsCodeTemplate;
     }
 
     protected override string GetIncludeTemplate()
     {
-        return Templates.CSIncludeTemplate;
+        return Templates.CsIncludeTemplate;
     }
 
     protected override string CreateImports(IEnumerable<string> imports)

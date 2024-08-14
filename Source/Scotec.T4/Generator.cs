@@ -246,13 +246,13 @@ public class Generator : IGenerator
         switch (language)
         {
             case "C#":
-                codeBuilder = new CSCodeBuilder();
+                codeBuilder = new CsCodeBuilder();
                 break;
             case "VB":
-                codeBuilder = new VBCodeBuilder();
+                codeBuilder = new VbCodeBuilder();
                 break;
             default:
-                codeBuilder = new CSCodeBuilder();
+                codeBuilder = new CsCodeBuilder();
                 break;
         }
 

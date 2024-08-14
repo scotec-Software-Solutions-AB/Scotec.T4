@@ -13,7 +13,7 @@ namespace Scotec.T4;
 public abstract class T4Generator
 {
     /// <summary>
-    ///     Contructor
+    ///     Constructor
     /// </summary>
     /// <param name="endOfLine">The line ending used for the generated text.</param>
     protected T4Generator(string endOfLine)

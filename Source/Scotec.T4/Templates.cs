@@ -7,10 +7,10 @@ namespace Scotec.T4;
 
 internal class Templates
 {
-    public static string CSCodeTemplate => ReadResource();
-    public static string CSIncludeTemplate => ReadResource();
-    public static string VBCodeTemplate => ReadResource();
-    public static string VBIncludeTemplate => ReadResource();
+    public static string CsCodeTemplate => ReadResource();
+    public static string CsIncludeTemplate => ReadResource();
+    public static string VbCodeTemplate => ReadResource();
+    public static string VbIncludeTemplate => ReadResource();
 
     private static string ReadResource([CallerMemberName] string name = null)
     {

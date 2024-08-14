@@ -108,7 +108,7 @@ internal abstract class CodeBuilder
 
         _code = GetCodeTemplate();
 
-        // Replace all CRLF by LF. This is not really necessary but it keeps the line endings in sync with the generated code.
+        // Replace all CRLF by LF. This is not really necessary, but it keeps the line endings in sync with the generated code.
         _code = _code.Replace("\r\n", "\n");
 
         _code = _code.Replace("<%namespace%>", Namespace);
@@ -126,7 +126,7 @@ internal abstract class CodeBuilder
     private StringBuilder CreateImplementation(IEnumerable<Part> parts)
     {
         var allParts = (from p in parts
-                        where p is StandardControlBlock || p is TextBlock || p is ExpressionControlBlock || p is IncludeDirective
+                        where p is StandardControlBlock or TextBlock or ExpressionControlBlock or IncludeDirective
                         select p).ToList();
 
         var result = new StringBuilder();
@@ -142,21 +142,21 @@ internal abstract class CodeBuilder
                 result.Append("\n");
                 result.Append(EndLinePragma());
             }
-            else if (part is TextBlock)
+            else if (part is TextBlock textBlock)
             {
-                result.Append(BeginLinePragma(part));
-                CreateTextBlock(result, CreateTextLines(((TextBlock)part).Content));
+                result.Append(BeginLinePragma(textBlock));
+                CreateTextBlock(result, CreateTextLines(textBlock.Content));
                 result.Append(EndLinePragma());
             }
-            else if (part is ExpressionControlBlock)
+            else if (part is ExpressionControlBlock controlBlock)
             {
-                result.Append(BeginLinePragma(part));
-                CreateInlineCode(result, ((ExpressionControlBlock)part).Content);
+                result.Append(BeginLinePragma(controlBlock));
+                CreateInlineCode(result, controlBlock.Content);
                 result.Append(EndLinePragma());
             }
-            else if (part is IncludeDirective)
+            else if (part is IncludeDirective directive)
             {
-                CreateIncludeCode(result, (IncludeDirective)part);
+                CreateIncludeCode(result, directive);
             }
         }
 
