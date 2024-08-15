@@ -19,10 +19,10 @@ internal class Templates
         // Format: "{Namespace}.{Folder}.{filename}.{Extension}"
         var resourcePath =
             assembly.GetManifestResourceNames()
-                    .Single(str => str.Contains(name));
+                    .Single(str => str.Contains(name!));
 
         using var stream = assembly.GetManifestResourceStream(resourcePath);
-        using var reader = new StreamReader(stream);
+        using var reader = new StreamReader(stream!);
         return reader.ReadToEnd();
     }
 }

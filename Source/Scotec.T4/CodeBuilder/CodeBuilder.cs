@@ -11,9 +11,20 @@ namespace Scotec.T4.CodeBuilder;
 
 internal abstract class CodeBuilder
 {
+    private readonly string[] _defaultImports;
     private string _code;
     private IEnumerable<string> _imports;
     private IEnumerable<Parameter> _parameters;
+
+    protected CodeBuilder()
+    {
+        _defaultImports = new[]
+        {
+            "System",
+            "System.Linq",
+            "System.Collections.Generic"
+        };
+    }
 
     protected IDictionary<IncludeDirective, IEnumerable<Part>> IncludedTemplates { get; set; }
 
@@ -70,17 +81,13 @@ internal abstract class CodeBuilder
     private void GetImports()
     {
         // Get all imports from main template.
-        var imports = (from p in Parts
-                       where p is ImportDirective
-                       select ((ImportDirective)p).Namespace).ToList();
+        var imports = Parts.OfType<ImportDirective>().Select(directive => directive.Namespace);
 
         // Add all imports from included templates.
-        imports = imports.Union(from i in IncludedTemplates.Values
-                                from p in i
-                                where p is ImportDirective
-                                select ((ImportDirective)p).Namespace).ToList();
+        imports = imports.Concat(IncludedTemplates.Values.SelectMany(included => included.OfType<ImportDirective>()
+                                                                                         .Select(directive => directive.Namespace)));
 
-        _imports = imports;
+        _imports = _defaultImports.Concat(imports).Distinct().ToList();
     }
 
     private void GetParameters()
@@ -100,7 +107,7 @@ internal abstract class CodeBuilder
     {
         var imports = CreateImports(_imports);
         var fields = CreateFields(_parameters);
-        var parameters = _parameters.Any() ? $", {CreateParameters(_parameters)}" : string.Empty;
+        var parameters = CreateConstructorParameters(_parameters);
         var initializers = CreateFieldInitializers(_parameters);
         var implementation = CreateImplementation(Parts);
         var features = CreateFeatures();
@@ -239,6 +246,8 @@ internal abstract class CodeBuilder
     protected abstract string CreateFields(IEnumerable<Parameter> parameters);
 
     protected abstract string CreateParameters(IEnumerable<Parameter> parameters);
+
+    protected abstract string CreateConstructorParameters(IEnumerable<Parameter> parameters);
 
     protected abstract string CreateCallParameters(IEnumerable<Parameter> parameters);
 

@@ -50,6 +50,11 @@ internal class VbCodeBuilder : CodeBuilder
         return string.Join(",", parameters.Select(parameter => $"ByVal {parameter.Name} As {parameter.Type}"));
     }
 
+    protected override string CreateConstructorParameters(IEnumerable<Parameter> parameters)
+    {
+        return ", parameters As Dictionary(Of String, Object)";
+    }
+
     protected override string CreateCallParameters(IEnumerable<Parameter> parameters)
     {
         return string.Join(",", parameters.Select(parameter => parameter.Name));
@@ -61,7 +66,9 @@ internal class VbCodeBuilder : CodeBuilder
 
         foreach (var parameter in parameters)
         {
-            result.AppendLine(string.Format("\t\t\tMe.{0} = {0}", parameter.Name));
+            //result.AppendLine($"\t\t\tthis.{parameter.Name} = ({parameter.Type})parameters[\"{parameter.Name}\"];");
+
+            result.AppendLine(string.Format($"\t\t\tMe.{parameter.Name} = DirectCast(parameters(\"{parameter.Name}\"), {parameter.Type})"));
         }
 
         return result.ToString();

@@ -66,7 +66,7 @@
                 Gets the generator settings.
             </summary>
         </member>
-        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -74,7 +74,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Boolean,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Boolean,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -83,7 +83,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Text.Encoding,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Text.Encoding,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -92,7 +92,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Boolean,System.Text.Encoding,System.String,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.GenerateToFile(System.String,System.Boolean,System.Text.Encoding,System.String,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
                 Generates a textual output for the given template into the specifies file.
             </summary>
@@ -102,7 +102,7 @@
             <param name="output"> The target file. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4.IGenerator.Generate(System.String,System.IO.TextWriter,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.Generate(System.String,System.IO.TextWriter,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
                 Generates textual output for the given template into a text writer.
             </summary>
@@ -110,7 +110,7 @@
             <param name="output"> The target text writer. </param>
             <param name="parameters"> Template parameters. </param>
         </member>
-        <member name="M:Scotec.T4.IGenerator.Generate(System.String,System.Boolean,System.IO.TextWriter,System.Object[])">
+        <member name="M:Scotec.T4.IGenerator.Generate(System.String,System.Boolean,System.IO.TextWriter,System.Collections.Generic.IDictionary{System.String,System.Object})">
             <summary>
                 Generates textual output for the given template into a text writer.
             </summary>

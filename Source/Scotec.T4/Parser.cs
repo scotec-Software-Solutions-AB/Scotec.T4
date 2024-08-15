@@ -26,10 +26,10 @@ internal class Parser
     private string TemplatePath { get; set; }
     private IGeneratorSettings Settings { get; }
 
-    public ParserResult Parse(string templateFile, string templatePath)
+    public ParserResult Parse(T4Template template, string templatePath)
     {
         var result = new ParserResult { IncludedTemplates = new Dictionary<IncludeDirective, IEnumerable<Part>>() };
-        result.Parts = Parse(templateFile, templatePath, result.IncludedTemplates);
+        result.Parts = Parse(template, templatePath, result.IncludedTemplates);
         result.TemplateName = MakeIdentifier(Path.GetFileNameWithoutExtension(TemplateFile));
 
         return result;

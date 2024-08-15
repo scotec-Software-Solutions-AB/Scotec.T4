@@ -25,7 +25,7 @@ public interface IGenerator
     /// <param name="template"> The T4 text template. </param>
     /// <param name="output"> The target file. </param>
     /// <param name="parameters"> Template parameters. </param>
-    void GenerateToFile(string template, string output, params object[] parameters);
+    void GenerateToFile(T4Template template, string output, IDictionary<string, object> parameters);
 
     /// <summary>
     ///     Generates a textual output for the given template into the specifies file.
@@ -34,7 +34,7 @@ public interface IGenerator
     /// <param name="noCache">The generator always creates and loads a new assembly for the given template</param>
     /// <param name="output"> The target file. </param>
     /// <param name="parameters"> Template parameters. </param>
-    void GenerateToFile(string template, bool noCache, string output, params object[] parameters);
+    void GenerateToFile(T4Template template, bool noCache, string output, IDictionary<string, object> parameters);
 
     /// <summary>
     ///     Generates a textual output for the given template into the specifies file.
@@ -43,7 +43,7 @@ public interface IGenerator
     /// <param name="encoding"> Encoding used when writing the textual output to the target file. </param>
     /// <param name="output"> The target file. </param>
     /// <param name="parameters"> Template parameters. </param>
-    void GenerateToFile(string template, Encoding encoding, string output, params object[] parameters);
+    void GenerateToFile(T4Template template, Encoding encoding, string output, IDictionary<string, object> parameters);
 
     /// <summary>
     ///     Generates a textual output for the given template into the specifies file.
@@ -53,7 +53,7 @@ public interface IGenerator
     /// <param name="encoding"> Encoding used when writing the textual output to the target file. </param>
     /// <param name="output"> The target file. </param>
     /// <param name="parameters"> Template parameters. </param>
-    void GenerateToFile(string template, bool noCache, Encoding encoding, string output, params object[] parameters);
+    void GenerateToFile(T4Template template, bool noCache, Encoding encoding, string output, IDictionary<string, object> parameters);
 
     /// <summary>
     ///     Generates textual output for the given template into a text writer.
@@ -61,7 +61,7 @@ public interface IGenerator
     /// <param name="template"> The T4 text template. </param>
     /// <param name="output"> The target text writer. </param>
     /// <param name="parameters"> Template parameters. </param>
-    void Generate(string template, TextWriter output, params object[] parameters);
+    void Generate(T4Template template, TextWriter output, IDictionary<string, object> parameters);
 
     /// <summary>
     ///     Generates textual output for the given template into a text writer.
@@ -70,7 +70,7 @@ public interface IGenerator
     /// <param name="noCache">The generator always creates and loads a new assembly for the given template</param>
     /// <param name="output"> The target text writer. </param>
     /// <param name="parameters"> Template parameters. </param>
-    void Generate(string template, bool noCache, TextWriter output, params object[] parameters);
+    void Generate(T4Template template, bool noCache, TextWriter output, IDictionary<string, object> parameters);
 
     /// <summary>
     ///     Asynchronously precompiles a list of templates without generating text. You don't have to wait until this method

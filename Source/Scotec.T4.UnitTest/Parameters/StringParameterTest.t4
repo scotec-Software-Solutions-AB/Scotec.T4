@@ -1,0 +1,4 @@
+﻿<#@ template language="%Language%" #>
+<#@ parameter type="string" name="text1"#>
+<#@ parameter type="string" name="text2"#>
+<#= text1 #> <#= text2 #>

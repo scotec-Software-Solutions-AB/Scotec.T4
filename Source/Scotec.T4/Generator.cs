@@ -5,13 +5,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Loader;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Scotec.T4.CodeBuilder;
 using Scotec.T4.Compiler;
 using Scotec.T4.Syntax;
+#if !NETFRAMEWORK
+using System.Runtime.Loader;
+#endif
 
 #endregion
 
@@ -35,7 +37,7 @@ public class Generator : IGenerator
 
     private IGeneratorSettings Settings { get; }
 
-    private Type GetGeneratorType(string template, bool noCache)
+    private Type GetGeneratorType(T4Template template, bool noCache)
     {
         Task<Type> task;
 
@@ -62,7 +64,7 @@ public class Generator : IGenerator
         return task.Result;
     }
 
-    private void GenerateToFile(string template, bool noCache, Encoding encoding, string output, params object[] parameters)
+    private void GenerateToFile(T4Template template, bool noCache, Encoding encoding, string output, IDictionary<string, object> parameters)
     {
         var path = Path.GetDirectoryName(output);
         if (string.IsNullOrEmpty(path))
@@ -92,20 +94,21 @@ public class Generator : IGenerator
         }
     }
 
-    private void Generate(string template, bool noCache, TextWriter output, params object[] parameters)
+    private void Generate(T4Template template, bool noCache, TextWriter output, IDictionary<string, object> parameters)
     {
+        parameters ??= new Dictionary<string, object>();
         var generatorType = GetGeneratorType(template, noCache);
 
         // Get the constructor for the generator.
         // First parameter is always a string for the endOfLine. This is parameter is implicit and not visible to the user.
-        var parameterTypes = new List<Type> { typeof(string) };
-        parameterTypes.AddRange(parameters.Select(parameter => parameter.GetType()));
-        var constructor = generatorType.GetConstructor(parameterTypes.ToArray());
+        var parameterTypes = new List<Type> { typeof(string), typeof(IDictionary<string, object>) };
+        //parameterTypes.AddRange(parameters.Select(parameter => parameter.GetType()));
+        //var constructor = generatorType.GetConstructor(parameterTypes.ToArray());
 
-// ReSharper disable PossibleNullReferenceException
-        var parameterList = new List<object> { GetEndOfLine() }.Concat(parameters).ToArray();
-        dynamic generator = constructor.Invoke(parameterList);
-// ReSharper restore PossibleNullReferenceException
+        var parameterList = new List<object> { GetEndOfLine(), parameters }.ToArray();
+        //dynamic generator = constructor.Invoke(parameterList);
+        //var generator = (T4Generator)constructor.Invoke(parameterList);
+        var generator = (T4Generator)Activator.CreateInstance(generatorType, parameterList);
 
         generator.Generate(output);
 
@@ -174,25 +177,30 @@ public class Generator : IGenerator
         var compiler = GetCompiler(templateDirective.Language);
         var compilation = compiler.Compile(codeBuilder.ClassName, code, codeFile, references);
 
-        using (var ms = new MemoryStream())
+        using var stream = new MemoryStream();
+        var result = compilation.Emit(stream);
+        if (!result.Success)
         {
-            var result = compilation.Emit(ms);
-            if (!result.Success)
+            var failures = result.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
+            foreach (var diagnostic in failures)
             {
-                var failures = result.Diagnostics.Where(diagnostic => diagnostic.IsWarningAsError || diagnostic.Severity == DiagnosticSeverity.Error);
-                foreach (var diagnostic in failures)
-                {
-                    Console.Error.WriteLine("\t{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
-                }
-
-                throw new T4CompilerException("Compiler error.", failures.ToList(), code, codeFile);
+                Console.Error.WriteLine("\t{0}: {1}", diagnostic.Id, diagnostic.GetMessage());
             }
 
-            ms.Seek(0, SeekOrigin.Begin);
-            var assembly = AssemblyLoadContext.Default.LoadFromStream(ms);
-
-            return assembly.GetType(codeBuilder.GeneratorType);
+            throw new T4CompilerException("Compiler error.", failures.ToList(), code, codeFile);
         }
+
+        stream.Seek(0, SeekOrigin.Begin);
+
+#if !NETFRAMEWORK
+        var currentLoadContext = AssemblyLoadContext.GetLoadContext(GetType().Assembly);
+        var assembly = currentLoadContext.LoadFromStream(stream);
+#else
+        var data = stream.ToArray();
+        var assembly = Assembly.Load(data);
+#endif
+
+        return assembly.GetType(codeBuilder.GeneratorType);
     }
 
     private CodeCompiler GetCompiler(string templateDirectiveLanguage)
@@ -235,8 +243,10 @@ public class Generator : IGenerator
         //var libs2 = AppDomain.CurrentDomain.GetAssemblies();
         //assemlyPaths.AddRange( libs2.Where( lib => !lib.IsDynamic ).Select( lib => lib.Location ) );
 
+#if !NETFRAMEWORK
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
-
+#else
+#endif
         return assemblyPaths.ToArray();
     }
 
@@ -409,32 +419,32 @@ public class Generator : IGenerator
 
     IGeneratorSettings IGenerator.Settings => Settings;
 
-    void IGenerator.GenerateToFile(string template, string output, params object[] parameters)
+    void IGenerator.GenerateToFile(string template, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, false, Encoding.UTF8, output, parameters);
     }
 
-    void IGenerator.GenerateToFile(string template, bool noCache, string output, params object[] parameters)
+    void IGenerator.GenerateToFile(string template, bool noCache, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, noCache, Encoding.UTF8, output, parameters);
     }
 
-    void IGenerator.GenerateToFile(string template, Encoding encoding, string output, params object[] parameters)
+    void IGenerator.GenerateToFile(string template, Encoding encoding, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, false, encoding, output, parameters);
     }
 
-    void IGenerator.GenerateToFile(string template, bool noCache, Encoding encoding, string output, params object[] parameters)
+    void IGenerator.GenerateToFile(string template, bool noCache, Encoding encoding, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, noCache, encoding, output, parameters);
     }
 
-    void IGenerator.Generate(string template, TextWriter output, params object[] parameters)
+    void IGenerator.Generate(string template, TextWriter output, IDictionary<string, object> parameters)
     {
         Generate(template, false, output, parameters);
     }
 
-    void IGenerator.Generate(string template, bool noCache, TextWriter output, params object[] parameters)
+    void IGenerator.Generate(string template, bool noCache, TextWriter output, IDictionary<string, object> parameters)
     {
         try
         {

@@ -1,5 +1,7 @@
 ﻿
 
+using System;
+using System.Collections.Generic;
 using Xunit;
 
 namespace Scotec.T4.UnitTest.AssemblyDirective
@@ -9,7 +11,7 @@ namespace Scotec.T4.UnitTest.AssemblyDirective
         [Fact]
         public void TestAssemblyDirective()
         {
-            Run( @"AssemblyDirective\AssemblyDirectiveTest.t4", "", new object[0] );
+            Run( @"AssemblyDirective\AssemblyDirectiveTest.t4", "", new Dictionary<string, object>() );
         }
     }
 }

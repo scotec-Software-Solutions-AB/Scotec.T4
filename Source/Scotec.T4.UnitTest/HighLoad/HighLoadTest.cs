@@ -56,7 +56,7 @@ namespace Scotec.T4.UnitTest.HighLoad
                     var stream = new MemoryStream();
                     var textWriter = new StreamWriter(stream, Encoding.UTF32);
 
-                    Generator.Generate(BuildPath(file), textWriter, new object[] { });
+                    Generator.Generate(BuildPath(file), textWriter, null);
                 });
 
 
