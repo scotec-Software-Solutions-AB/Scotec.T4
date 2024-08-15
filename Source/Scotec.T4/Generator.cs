@@ -43,7 +43,7 @@ public class Generator : IGenerator
 
         lock (CompilationTasks)
         {
-            if (noCache || !CompilationTasks.TryGetValue(template, out task))
+            if (noCache || !CompilationTasks.TryGetValue(template.Id, out task))
             {
                 task = new Task<Type>(() => Compile(template));
 
@@ -139,7 +139,7 @@ public class Generator : IGenerator
         }
     }
 
-    private Type Compile(string template)
+    private Type Compile(T4Template template)
     {
         // Parse the template
         var parser = new Parser(Settings);
