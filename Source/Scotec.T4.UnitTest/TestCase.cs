@@ -23,13 +23,7 @@ namespace Scotec.T4.UnitTest
             _generator = new Generator();
         }
 
-
-        protected void Run( string templateFile, string expectedResult, IDictionary<string, object> parameters )
-        {
-            Run( templateFile, false, expectedResult, parameters);
-        }
-
-        protected void Run( string templateFile, bool noCache, string expectedResult, IDictionary<string, object> parameters)
+        protected void Run( string templateFile, string expectedResult, IDictionary<string, object> parameters)
         {
             var generator = Generator;
 
@@ -41,7 +35,26 @@ namespace Scotec.T4.UnitTest
             generator.Generate( template, textWriter, parameters);
 
             stream.Seek( 0, SeekOrigin.Begin );
-            var textReader = new StreamReader( stream );
+            using var textReader = new StreamReader( stream );
+
+            var generatedText = textReader.ReadToEnd();
+
+            Assert.Equal( expectedResult, generatedText );
+        }
+
+        protected void Run( string templateText, string name, string expectedResult, IDictionary<string, object> parameters)
+        {
+            var generator = Generator;
+
+            //generator.Settings.EndOfLine = EndOfLine.CRLF;
+
+            using var stream = new MemoryStream();
+            using var textWriter = new StreamWriter( stream, Encoding.UTF32);
+            var template = T4Template.FromString(templateText, name);
+            generator.Generate( template, textWriter, parameters);
+
+            stream.Seek( 0, SeekOrigin.Begin );
+            using var textReader = new StreamReader( stream );
 
             var generatedText = textReader.ReadToEnd();
 
@@ -61,7 +74,7 @@ namespace Scotec.T4.UnitTest
             generator.Generate(template, textWriter, parameters);
 
             stream.Seek( 0, SeekOrigin.Begin );
-            var textReader = new StreamReader( stream );
+            using var textReader = new StreamReader( stream );
 
             return textReader.ReadToEnd();
         }

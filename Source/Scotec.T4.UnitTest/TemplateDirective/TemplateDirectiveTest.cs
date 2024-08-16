@@ -15,7 +15,14 @@ namespace Scotec.T4.UnitTest.TemplateDirective
         public void TestTemplateDirective()
         {
             //Generator.Settings.UseAssemblyResolver = true;
-            Run(@"TemplateDirective\TemplateDirectiveTest.t4", "", new Dictionary<string, object>());
+            Run(@"TemplateDirective\TemplateDirectiveTest.t4", "TEST", new Dictionary<string, object>());
+        }
+
+        [Fact]
+        public void TestTemplateDirectiveFromString()
+        {
+            //Generator.Settings.UseAssemblyResolver = true;
+            Run("<#@ template language=\"C#\" #>\r\nTEST", "TemplateDirectiveTest", "TEST", new Dictionary<string, object>());
         }
 
         [Fact]

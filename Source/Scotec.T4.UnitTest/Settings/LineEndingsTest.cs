@@ -17,7 +17,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.CR;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\rb\rc\r", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\rb\rc\r", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -26,7 +26,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.CRLF;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\r\nb\r\nc\r\n", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\r\nb\r\nc\r\n", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.LF;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\nb\nc\n", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\nb\nc\n", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -44,7 +44,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.LFCR;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\n\rb\n\rc\n\r", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\n\rb\n\rc\n\r", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -53,7 +53,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.LS;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\u2028b\u2028c\u2028", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\u2028b\u2028c\u2028", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.NEL;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\u0085b\u0085c\u0085", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\u0085b\u0085c\u0085", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.PS;
             Generator.Options.TemplateParameters.Add("Language", "C#");
 
-            Run( @"Settings\LineEndingsTest.t4", true, "a\u2029b\u2029c\u2029", new Dictionary<string, object>() );
+            Run( @"Settings\LineEndingsTest.t4", "a\u2029b\u2029c\u2029", new Dictionary<string, object>() );
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.CR;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\rb\rc\r", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\rb\rc\r", new Dictionary<string, object>());
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.CRLF;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\r\nb\r\nc\r\n", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\r\nb\r\nc\r\n", new Dictionary<string, object>());
         }
 
         [Fact]
@@ -98,7 +98,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.LF;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\nb\nc\n", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\nb\nc\n", new Dictionary<string, object>());
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.LFCR;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\n\rb\n\rc\n\r", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\n\rb\n\rc\n\r", new Dictionary<string, object>());
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.LS;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\u2028b\u2028c\u2028", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\u2028b\u2028c\u2028", new Dictionary<string, object>());
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.NEL;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\u0085b\u0085c\u0085", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\u0085b\u0085c\u0085", new Dictionary<string, object>());
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Scotec.T4.UnitTest.Settings
             Generator.Options.EndOfLine = EndOfLine.PS;
             Generator.Options.TemplateParameters.Add("Language", "VB");
 
-            Run(@"Settings\LineEndingsTest.t4", true, "a\u2029b\u2029c\u2029", new Dictionary<string, object>());
+            Run(@"Settings\LineEndingsTest.t4", "a\u2029b\u2029c\u2029", new Dictionary<string, object>());
         }
     }
 }

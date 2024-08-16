@@ -25,7 +25,7 @@ internal class Parser
     }
 
     private T4Template Template { get; set; }
-    public int[] Lines { get; private set; }
+    public int[] Lines { get; private set; }    
     private T4Options Settings { get; }
 
     public ParserResult Parse(T4Template template)
@@ -49,37 +49,35 @@ internal class Parser
         };
     }
 
-    private void ReadTemplate(T4Template template, out string content)
+    private void ReadTemplate(T4Template template, IList<string> searchPaths, out string content)
     {
+        Func<string> readContent;
         if (string.IsNullOrWhiteSpace(template.File))
         {
-            content = template.Template;
+            readContent = () => template.Template;
         }
         else
         {
-            var stream = File.OpenText(Helper.FindFile(template.File, Settings.SearchPaths));
-
-            // Read the content and convert all types of line endings to LF
-            content = LineEndings.Replace(stream.ReadToEnd(), "\n");
+            readContent = () =>
+            {
+                using var stream = File.OpenText(Helper.FindFile(template.File, searchPaths));
+                return LineEndings.Replace(stream.ReadToEnd(), "\n");
+            };
         }
+
+        // Read the content and convert all types of line endings to LF
+        // It is not possible to print a backslash '\' before the opening tag '<=' because the regex interprets
+        // a backslash as an escape character. Escaping the escape character would result in a very complex regex.
+        // Therefore, replace the escaped backslash by an expression block containing a backslash as string.
+        // '\\<# ... #>! results in '<#= "\\" #><# ... #>'
+        content = LineEndings.Replace(readContent(), "\n").Replace(@"\\<#", @"<#= @""\"" #><#");
     }
 
     private IEnumerable<Part> Parse(T4Template template, IList<string> searchPaths,
                                     IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
     {
         Template = template;
-        var stream = File.OpenText(template.File);
-
-        // Read the content and convert all types of line endings to LF
-        var content = LineEndings.Replace(stream.ReadToEnd(), "\n");
-
-        // It is not possible to print a backslash '\' before the opening tag '<=' because the regex interprets
-        // a backslash as an escape character. Escaping the escape character would result in a very complex regex.
-        // Therefore, replace the escaped backslash by an expression block containing a backslash as string.
-        // '\\<# ... #>! results in '<#= "\\" #><# ... #>'
-        content = content.Replace(@"\\<#", @"<#= @""\"" #><#");
-
-        stream.Close();
+        ReadTemplate(template, searchPaths, out var content);
 
         Lines = GetLines(content);
 

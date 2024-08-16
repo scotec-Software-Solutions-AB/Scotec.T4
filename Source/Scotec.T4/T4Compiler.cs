@@ -98,24 +98,25 @@ internal class T4Compiler
 
     private string[] GetReferencedAssemlies(ParserResult parserResult)
     {
-        // Get all referenced assemblies from the main template.
-        var assemblies = (from p in parserResult.Parts
-                          where p is AssemblyDirective
-                          select ((AssemblyDirective)p).Name).ToList();
-
-        assemblies = assemblies.Union(_settings.ReferenceAssemblies).ToList();
-        // Add all referenced assemblies from the included templates.
-        assemblies = assemblies.Union(from i in parserResult.IncludedTemplates.Values
-                                      from p in i
-                                      where p is AssemblyDirective
-                                      select ((AssemblyDirective)p).Name).Distinct().ToList();
-
         // Include this assembly to the referenced assemblies list.
-        assemblies.Insert(0, Assembly.GetExecutingAssembly().Location);
+        var assemblies = (IEnumerable<string>)new [] {Assembly.GetExecutingAssembly().Location};
+
+
+        // Get all referenced assemblies from the main template.
+        assemblies = assemblies.Concat(from p in parserResult.Parts
+                          where p is AssemblyDirective
+                          select ((AssemblyDirective)p).Name);
+
+        assemblies = assemblies.Concat(_settings.ReferenceAssemblies);
+        // Add all referenced assemblies from the included templates.
+        assemblies = assemblies.Concat(from i in parserResult.IncludedTemplates.Values
+                                       from p in i
+                                       where p is AssemblyDirective
+                                       select ((AssemblyDirective)p).Name)
+                               .Distinct();
 
         var referencePaths = GetReferencePaths();
         var assemblyPaths = assemblies.Select(assembly => FindAssembly(assembly, referencePaths)).ToList();
-
 
 #if !NETFRAMEWORK
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));

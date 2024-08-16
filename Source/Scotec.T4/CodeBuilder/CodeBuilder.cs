@@ -141,34 +141,48 @@ internal abstract class CodeBuilder
 
         foreach (var part in allParts)
         {
-            if (part is StandardControlBlock block)
+            switch (part)
             {
-                result.Append(BeginLinePragma(part));
-                result.Append(block.Content);
-
-                // Always add a line break at the end of the standard control block.
-                result.Append("\n");
-                result.Append(EndLinePragma());
-            }
-            else if (part is TextBlock textBlock)
-            {
-                result.Append(BeginLinePragma(textBlock));
-                CreateTextBlock(result, CreateTextLines(textBlock.Content));
-                result.Append(EndLinePragma());
-            }
-            else if (part is ExpressionControlBlock controlBlock)
-            {
-                result.Append(BeginLinePragma(controlBlock));
-                CreateInlineCode(result, controlBlock.Content);
-                result.Append(EndLinePragma());
-            }
-            else if (part is IncludeDirective directive)
-            {
-                CreateIncludeCode(result, directive);
+                case StandardControlBlock block:
+                    AppendStandardControlBlock(part, block);
+                    break;
+                case TextBlock textBlock:
+                    AppendTextBlock(textBlock);
+                    break;
+                case ExpressionControlBlock controlBlock:
+                    AppendExpressionControlBlock(controlBlock);
+                    break;
+                case IncludeDirective directive:
+                    CreateIncludeCode(result, directive);
+                    break;
             }
         }
 
         return result;
+
+        void AppendStandardControlBlock(Part part, StandardControlBlock block)
+        {
+            result.Append(BeginLinePragma(part));
+            result.Append(block.Content);
+
+            // Always add a line break at the end of the standard control block.
+            result.Append("\n");
+            result.Append(EndLinePragma());
+        }
+
+        void AppendTextBlock(TextBlock textBlock)
+        {
+            result.Append(BeginLinePragma(textBlock));
+            CreateTextBlock(result, CreateTextLines(textBlock.Content));
+            result.Append(EndLinePragma());
+        }
+
+        void AppendExpressionControlBlock(ExpressionControlBlock controlBlock)
+        {
+            result.Append(BeginLinePragma(controlBlock));
+            CreateInlineCode(result, controlBlock.Content);
+            result.Append(EndLinePragma());
+        }
     }
 
     private void CreateIncludeCode(StringBuilder result, IncludeDirective directive)
