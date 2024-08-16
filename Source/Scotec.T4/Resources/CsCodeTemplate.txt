@@ -11,7 +11,7 @@ namespace <%namespace%>
 <%fieldinitializations%>
 		}
 		
-		protected override void Generate()
+		protected override async Task GenerateAsync()
 		{
 <%implementation%>
 		}

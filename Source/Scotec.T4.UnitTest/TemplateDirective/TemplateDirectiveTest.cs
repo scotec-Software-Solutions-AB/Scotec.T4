@@ -39,9 +39,9 @@ namespace Scotec.T4.UnitTest.TemplateDirective
         [Fact]
         public void TestTemplateDirectiveContainingMacros()
         {
-            Generator.Settings.TemplateParameters.Add( "Macro1", "Scotec" );
-            Generator.Settings.TemplateParameters.Add( "Macro2", "Testx" );
-            Generator.Settings.TemplateParameters.Add("Macro3", "TemplateDirectiveWithCodefileTest");
+            Generator.Options.TemplateParameters.Add( "Macro1", "Scotec" );
+            Generator.Options.TemplateParameters.Add( "Macro2", "Testx" );
+            Generator.Options.TemplateParameters.Add("Macro3", "TemplateDirectiveWithCodefileTest");
                                                       
             Run(@"TemplateDirective\TemplateDirectiveContainingMacrosTest.t4", "", new Dictionary<string, object>());
         }

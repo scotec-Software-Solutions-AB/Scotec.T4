@@ -1,5 +1,5 @@
 ﻿
-		private void <%templatename%>TemplateMethod( <%parameters%>)
+		private async Task <%templatename%>TemplateMethodAsync( <%parameters%>)
 		{
 <%include%>
 		}

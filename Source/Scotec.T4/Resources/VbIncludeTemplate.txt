@@ -1,4 +1,4 @@
 ﻿
-		Private Sub <%templatename%>TemplateMethod( <%parameters%>)
+		Private Async Function <%templatename%>TemplateMethodAsync( <%parameters%>) As Task
 <%include%>
-		End Sub
+		End Function

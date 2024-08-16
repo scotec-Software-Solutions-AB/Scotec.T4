@@ -10,29 +10,29 @@ namespace Scotec.T4;
 /// </summary>
 public class T4Template
 {
-    private T4Template(string template)
+    private T4Template(string template, string name)
     {
         Template = template;
+        Name = name;
         File = null;
-        // TODO Generate hashcode.
-        Id = GetHashCode(template); 
     }
 
-    private T4Template(FileInfo file)
+    private T4Template(string file)
     {
         File = file;
+        Name = Path.GetFileNameWithoutExtension(file);
         Template = null;
-        Id = GetHashCode(file.Name);
     }
+
 
     /// <summary>
     /// 
     /// </summary>
-    public string Id { get; }
+    public string Name { get; }
 
     /// <summary>
     /// </summary>
-    public FileInfo File { get; }
+    public string File { get; }
 
     /// <summary>
     /// </summary>
@@ -44,32 +44,15 @@ public class T4Template
     /// <returns></returns>
     public static T4Template FromFile(string file)
     {
-        return new T4Template(new FileInfo(MakePathAbsolute(file)));
+        return new T4Template(file);
     }
 
     /// <summary>
     /// </summary>
     /// <param name="template"></param>
     /// <returns></returns>
-    public static T4Template FromString(string template)
+    public static T4Template FromString(string template, string name)
     {
-        return new T4Template(template);
+        return new T4Template(template, name);
     }
-
-    private static string GetHashCode(string input)
-    {
-        var algorithm = SHA256.Create();
-        var digest = algorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
-        return BitConverter.ToString(digest);
-    }
-
-    private static string MakePathAbsolute(string file)
-    {
-        if (Path.IsPathRooted(file))
-            return file;
-
-        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        return Path.Combine(path, file);
-    }
-
 }

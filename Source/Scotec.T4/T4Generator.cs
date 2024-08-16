@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -37,25 +38,35 @@ public abstract class T4Generator
     /// <param name="output"> The target stream. </param>
     public void Generate(TextWriter output)
     {
-        Output = output;
+        GenerateAsync(output).GetAwaiter().GetResult();
+    }
 
-        Generate();
+    /// <summary>
+    ///     Generates the textual output. This method will be called by the template generator.
+    /// </summary>
+    /// <param name="output"> The target stream. </param>
+    public async Task GenerateAsync(TextWriter output)
+    {
+        Output = output;
+        await GenerateAsync();
+        await output.FlushAsync();
+
     }
 
     /// <summary>
     ///     Used by the T4 text template generator.
     /// </summary>
-    protected abstract void Generate();
+    protected abstract Task GenerateAsync();
 
     /// <summary>
     ///     Used by the T4 text template generator. Can be also called in the code part of the template.
     /// </summary>
     [DebuggerStepThrough]
-    protected void Write(string text)
+    protected async Task WriteAsync(string text)
     {
         if (text != null)
         {
-            Output.Write(text);
+            await Output.WriteAsync(text);
         }
     }
 
@@ -63,11 +74,11 @@ public abstract class T4Generator
     ///     Used by the T4 text template generator. Can be also called in the code part of the template.
     /// </summary>
     [DebuggerStepThrough]
-    protected void Write(object value)
+    protected async Task WriteAsync(object value)
     {
         if (value != null)
         {
-            Write(value.ToString());
+            await WriteAsync(value.ToString());
         }
     }
 }

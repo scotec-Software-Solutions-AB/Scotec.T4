@@ -76,20 +76,20 @@ internal class CsCodeBuilder : CodeBuilder
     {
         foreach (var line in content)
         {
-            result.AppendLine($"\t\t\tWrite( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} );");
+            result.AppendLine($"\t\t\tawait WriteAsync( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} );");
         }
     }
 
     protected override void CreateInlineCode(StringBuilder result, string statement)
     {
-        result.AppendLine($"\t\t\tWrite( {statement} );");
+        result.AppendLine($"\t\t\tawait WriteAsync( {statement} );");
     }
 
     protected override string CreateMethodCall(StringBuilder result, IncludeDirective directive)
     {
         var parameters = GetParameters(IncludedTemplates[directive]);
 
-        result.AppendLine($"\t\t\t{directive.Name}TemplateMethod({CreateCallParameters(parameters)});");
+        result.AppendLine($"\t\t\tawait {directive.Name}TemplateMethodAsync({CreateCallParameters(parameters)});");
 
         return result.ToString();
     }

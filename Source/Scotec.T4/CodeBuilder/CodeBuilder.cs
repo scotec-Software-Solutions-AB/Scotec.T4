@@ -22,6 +22,7 @@ internal abstract class CodeBuilder
         {
             "System",
             "System.Linq",
+            "System.Threading.Tasks",
             "System.Collections.Generic"
         };
     }
@@ -66,7 +67,7 @@ internal abstract class CodeBuilder
 
         if (string.IsNullOrEmpty(fullName))
         {
-            ClassName = ParserResult.TemplateName;
+            ClassName = ParserResult.Template.Name;
             Namespace = "Scotec.T4";
         }
         else

@@ -35,10 +35,10 @@ namespace Scotec.T4.UnitTest
 
             //generator.Settings.EndOfLine = EndOfLine.CRLF;
 
-            var stream = new MemoryStream();
-            var textWriter = new StreamWriter( stream, Encoding.UTF32 );
+            using var stream = new MemoryStream();
+            using var textWriter = new StreamWriter( stream, Encoding.UTF32);
             var template = T4Template.FromFile(templateFile);
-            generator.Generate( template, noCache, textWriter, parameters);
+            generator.Generate( template, textWriter, parameters);
 
             stream.Seek( 0, SeekOrigin.Begin );
             var textReader = new StreamReader( stream );
@@ -48,12 +48,8 @@ namespace Scotec.T4.UnitTest
             Assert.Equal( expectedResult, generatedText );
         }
 
-        protected string Run( string templateFile, IDictionary<string, object> parameters)
-        {
-            return Run( templateFile, false, parameters);
-        }
 
-        protected string Run( string templateFile, bool noCache, IDictionary<string, object> parameters)
+        protected string Run( string templateFile, IDictionary<string, object> parameters)
         {
             var generator = Generator;
 
@@ -62,7 +58,7 @@ namespace Scotec.T4.UnitTest
             var path = BuildPath(templateFile);
             var template = T4Template.FromFile(path);
 
-            generator.Generate(template , noCache, textWriter, parameters);
+            generator.Generate(template, textWriter, parameters);
 
             stream.Seek( 0, SeekOrigin.Begin );
             var textReader = new StreamReader( stream );

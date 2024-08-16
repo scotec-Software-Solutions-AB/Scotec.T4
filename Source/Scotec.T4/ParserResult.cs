@@ -13,5 +13,7 @@ internal class ParserResult
 
     public IDictionary<IncludeDirective, IEnumerable<Part>> IncludedTemplates { get; set; }
 
-    public string TemplateName { get; set; }
+    public T4Template Template { get; set; }
+
+    public IList<string> SearchPaths { get; set; }
 }

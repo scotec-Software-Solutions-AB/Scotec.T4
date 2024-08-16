@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 #endregion
@@ -12,12 +13,12 @@ internal class MacroResolver
 {
     private static readonly Regex Regex = new(@"%(([^%])+)%", RegexOptions.Compiled);
 
-    public MacroResolver(IGeneratorSettings settings)
-    {
-        Settings = settings;
-    }
+    private readonly IDictionary<string, string> _templateParameters;
 
-    private IGeneratorSettings Settings { get; }
+    public MacroResolver(IDictionary<string, string>  templateParameters)
+    {
+        _templateParameters = templateParameters;
+    }
 
     public string Resolve(string text)
     {
@@ -36,7 +37,7 @@ internal class MacroResolver
     private string GetValue(string macro)
     {
         // First try to get the value from options.
-        if (Settings.TemplateParameters != null && Settings.TemplateParameters.TryGetValue(macro, out var result))
+        if (_templateParameters != null && _templateParameters.TryGetValue(macro, out var result))
         {
             return result;
         }

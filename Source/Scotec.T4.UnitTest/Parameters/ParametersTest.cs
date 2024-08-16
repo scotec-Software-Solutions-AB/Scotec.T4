@@ -15,7 +15,7 @@ public class ParametersTest : TestCase
         const string text1 = "TEXT1";
         const string text2 = "TEXT2";
 
-        Generator.Settings.TemplateParameters.Add("Language", "C#");
+        Generator.Options.TemplateParameters.Add("Language", "C#");
         var parameters = new Dictionary<string, object>
         {
             { "text1", text1 },
@@ -31,7 +31,7 @@ public class ParametersTest : TestCase
         const string text1 = "TEXT1";
         const string text2 = "TEXT2";
 
-        Generator.Settings.TemplateParameters.Add("Language", "VB");
+        Generator.Options.TemplateParameters.Add("Language", "VB");
         var parameters = new Dictionary<string, object>
         {
             { "text1", text1 },

@@ -78,20 +78,20 @@ internal class VbCodeBuilder : CodeBuilder
     {
         foreach (var line in content)
         {
-            result.AppendLine($"\t\t\tWrite( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} )");
+            result.AppendLine($"\t\t\tAwait WriteAsync( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} )");
         }
     }
 
     protected override void CreateInlineCode(StringBuilder result, string statement)
     {
-        result.AppendLine($"\t\t\tWrite( {statement} )");
+        result.AppendLine($"\t\t\tAwait WriteAsync( {statement} )");
     }
 
     protected override string CreateMethodCall(StringBuilder result, IncludeDirective directive)
     {
         var parameters = GetParameters(IncludedTemplates[directive]);
 
-        result.AppendLine($"\t\t\t{directive.Name}TemplateMethod({CreateCallParameters(parameters)})");
+        result.AppendLine($"\t\t\tAwait {directive.Name}TemplateMethodAsync({CreateCallParameters(parameters)})");
 
         return result.ToString();
     }
