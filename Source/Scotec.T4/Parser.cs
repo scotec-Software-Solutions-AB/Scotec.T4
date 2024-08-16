@@ -21,16 +21,15 @@ internal class Parser
         Settings = settings;
     }
 
-    private string TemplateFile { get; set; }
+    private T4Template Template { get; set; }
     public int[] Lines { get; private set; }
-    private string TemplatePath { get; set; }
     private IGeneratorSettings Settings { get; }
 
-    public ParserResult Parse(T4Template template, string templatePath)
+    public ParserResult Parse(T4Template template)
     {
         var result = new ParserResult { IncludedTemplates = new Dictionary<IncludeDirective, IEnumerable<Part>>() };
-        result.Parts = Parse(template, templatePath, result.IncludedTemplates);
-        result.TemplateName = MakeIdentifier(Path.GetFileNameWithoutExtension(TemplateFile));
+        result.Parts = Parse(template, result.IncludedTemplates);
+        result.TemplateName = Path.GetFileNameWithoutExtension(template.File.Name);
 
         return result;
     }
@@ -40,13 +39,12 @@ internal class Parser
         return Identifier.Replace(possibleIdentifier, "_");
     }
 
-    private IEnumerable<Part> Parse(string templateFile, string templatePath,
+    private IEnumerable<Part> Parse(T4Template template,
                                     IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
     {
-        TemplatePath = string.IsNullOrEmpty(templatePath) ? Path.GetDirectoryName(templateFile) : templatePath;
-        TemplateFile = MakePathAbsolute(templateFile);
+        Template = template;
 
-        var stream = File.OpenText(TemplateFile);
+        var stream = File.OpenText(template.File.FullName);
 
         // Read the content and convert all types of line endings to LF
         var content = LineEndings.Replace(stream.ReadToEnd(), "\n");
@@ -108,7 +106,7 @@ internal class Parser
 
     private TextBlock CreateTextBlock(int position, string content)
     {
-        return new TextBlock(position, content) { Line = GetLineFromPosition(position), Source = TemplateFile };
+        return new TextBlock(position, content) { Line = GetLineFromPosition(position), Source = Template.File.FullName };
     }
 
     private void ReadExpressions(List<Part> parts, string content)
@@ -138,7 +136,7 @@ internal class Parser
             if (part != null)
             {
                 part.Line = GetLineFromPosition(part.Position);
-                part.Source = TemplateFile;
+                part.Source = Template.File.FullName;
                 parts.Add(part);
             }
         }
@@ -166,7 +164,7 @@ internal class Parser
 
             // Add the key but do not assign a value. We need the key as a break condition in subsequent calls to ReadIncludes().
             includedTemplates.Add(include, null);
-            var includedParts = parser.Parse(include.File, TemplatePath, includedTemplates).ToArray();
+            var includedParts = parser.Parse(T4Template.FromFile(include.File), includedTemplates).ToArray();
             includedTemplates[include] = includedParts;
 
             ReadIncludes(includedParts, includedTemplates);
@@ -178,17 +176,5 @@ internal class Parser
         return Array.IndexOf(Lines, (from l in Lines
                                      where l <= position
                                      select l).Last()) + 1;
-    }
-
-    private string MakePathAbsolute(string path)
-    {
-        if (Path.IsPathRooted(path))
-        {
-            return path;
-        }
-
-        var newPath = new Uri(Path.Combine(TemplatePath, path));
-
-        return newPath.LocalPath;
     }
 }

@@ -24,12 +24,12 @@ namespace Scotec.T4.UnitTest
         }
 
 
-        protected void Run( string template, string expectedResult, IDictionary<string, object> parameters )
+        protected void Run( string templateFile, string expectedResult, IDictionary<string, object> parameters )
         {
-            Run( template, false, expectedResult, parameters);
+            Run( templateFile, false, expectedResult, parameters);
         }
 
-        protected void Run( string template, bool noCache, string expectedResult, IDictionary<string, object> parameters)
+        protected void Run( string templateFile, bool noCache, string expectedResult, IDictionary<string, object> parameters)
         {
             var generator = Generator;
 
@@ -37,8 +37,8 @@ namespace Scotec.T4.UnitTest
 
             var stream = new MemoryStream();
             var textWriter = new StreamWriter( stream, Encoding.UTF32 );
-
-            generator.Generate( BuildPath( template ), noCache, textWriter, parameters);
+            var template = T4Template.FromFile(templateFile);
+            generator.Generate( template, noCache, textWriter, parameters);
 
             stream.Seek( 0, SeekOrigin.Begin );
             var textReader = new StreamReader( stream );
@@ -48,19 +48,21 @@ namespace Scotec.T4.UnitTest
             Assert.Equal( expectedResult, generatedText );
         }
 
-        protected string Run( string template, IDictionary<string, object> parameters)
+        protected string Run( string templateFile, IDictionary<string, object> parameters)
         {
-            return Run( template, false, parameters);
+            return Run( templateFile, false, parameters);
         }
 
-        protected string Run( string template, bool noCache, IDictionary<string, object> parameters)
+        protected string Run( string templateFile, bool noCache, IDictionary<string, object> parameters)
         {
             var generator = Generator;
 
             var stream = new MemoryStream();
             var textWriter = new StreamWriter( stream, Encoding.UTF32 );
+            var path = BuildPath(templateFile);
+            var template = T4Template.FromFile(path);
 
-            generator.Generate( BuildPath( template ), noCache, textWriter, parameters);
+            generator.Generate(template , noCache, textWriter, parameters);
 
             stream.Seek( 0, SeekOrigin.Begin );
             var textReader = new StreamReader( stream );
@@ -69,13 +71,13 @@ namespace Scotec.T4.UnitTest
         }
 
 
-        protected string BuildPath( string template )
+        protected string BuildPath( string file )
         {
-            if (Path.IsPathRooted(template))
-                return template;
+            if (Path.IsPathRooted(file))
+                return file;
 
             var path = Path.GetDirectoryName( Assembly.GetExecutingAssembly().Location );
-            return Path.Combine( path, template );
+            return Path.Combine( path, file );
         }
 
         public void Dispose()

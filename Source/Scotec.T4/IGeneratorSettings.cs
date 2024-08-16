@@ -12,8 +12,8 @@ namespace Scotec.T4;
 public interface IGeneratorSettings
 {
     /// <summary>
-    ///     Gets a list of reference paths. A reference path will be used to relolve assembly references. You can your
-    ///     application specific reference paths to the list.
+    ///     Gets a list of reference paths. A reference path will be used to relolve assembly references. You can 
+    ///     add your application specific reference paths to the list.
     /// </summary>
     IList<string> ReferencePaths { get; }
 

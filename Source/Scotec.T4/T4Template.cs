@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Scotec.T4;
 
@@ -11,14 +15,14 @@ public class T4Template
         Template = template;
         File = null;
         // TODO Generate hashcode.
-        Id = template; 
+        Id = GetHashCode(template); 
     }
 
     private T4Template(FileInfo file)
     {
         File = file;
         Template = null;
-        Id = file.Name;
+        Id = GetHashCode(file.Name);
     }
 
     /// <summary>
@@ -38,9 +42,9 @@ public class T4Template
     /// </summary>
     /// <param name="file"></param>
     /// <returns></returns>
-    public static T4Template FromFile(FileInfo file)
+    public static T4Template FromFile(string file)
     {
-        return new T4Template(file);
+        return new T4Template(new FileInfo(MakePathAbsolute(file)));
     }
 
     /// <summary>
@@ -51,4 +55,21 @@ public class T4Template
     {
         return new T4Template(template);
     }
+
+    private static string GetHashCode(string input)
+    {
+        var algorithm = SHA256.Create();
+        var digest = algorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
+        return BitConverter.ToString(digest);
+    }
+
+    private static string MakePathAbsolute(string file)
+    {
+        if (Path.IsPathRooted(file))
+            return file;
+
+        var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        return Path.Combine(path, file);
+    }
+
 }

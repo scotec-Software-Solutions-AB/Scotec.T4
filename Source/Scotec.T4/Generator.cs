@@ -49,7 +49,7 @@ public class Generator : IGenerator
 
                 if (!noCache)
                 {
-                    CompilationTasks.Add(template, task);
+                    CompilationTasks.Add(template.Id, task);
                 }
 
                 task.Start();
@@ -143,20 +143,18 @@ public class Generator : IGenerator
     {
         // Parse the template
         var parser = new Parser(Settings);
-        var parserResult = parser.Parse(template, null);
+        var parserResult = parser.Parse(template);
 
         // Get the language.
 // ReSharper disable PossibleMultipleEnumeration
         var templateDirective = (from p in parserResult.Parts
                                  where p is TemplateDirective
                                  select (TemplateDirective)p).First();
-// ReSharper restore PossibleMultipleEnumeration
 
         // Get a code builder.
         var codeBuilder = GetCodeBuilder(templateDirective.Language);
 
         // Generate the code for the generator.
-// ReSharper disable PossibleMultipleEnumeration
         var code = codeBuilder.Generate(parserResult);
 
         var codeFileName = (from p in parserResult.Parts
@@ -166,9 +164,7 @@ public class Generator : IGenerator
         var codeFile = string.Empty;
         if (!string.IsNullOrEmpty(codeFileName))
         {
-// ReSharper disable AssignNullToNotNullAttribute
-            codeFileName = Path.Combine(Path.GetDirectoryName(template), codeFileName);
-// ReSharper restore AssignNullToNotNullAttribute
+            codeFileName = Path.Combine(template.File.DirectoryName!, codeFileName);
             codeFile = File.OpenText(codeFileName).ReadToEnd();
         }
 
@@ -419,32 +415,32 @@ public class Generator : IGenerator
 
     IGeneratorSettings IGenerator.Settings => Settings;
 
-    void IGenerator.GenerateToFile(string template, string output, IDictionary<string, object> parameters)
+    void IGenerator.GenerateToFile(T4Template template, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, false, Encoding.UTF8, output, parameters);
     }
 
-    void IGenerator.GenerateToFile(string template, bool noCache, string output, IDictionary<string, object> parameters)
+    void IGenerator.GenerateToFile(T4Template template, bool noCache, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, noCache, Encoding.UTF8, output, parameters);
     }
 
-    void IGenerator.GenerateToFile(string template, Encoding encoding, string output, IDictionary<string, object> parameters)
+    void IGenerator.GenerateToFile(T4Template template, Encoding encoding, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, false, encoding, output, parameters);
     }
 
-    void IGenerator.GenerateToFile(string template, bool noCache, Encoding encoding, string output, IDictionary<string, object> parameters)
+    void IGenerator.GenerateToFile(T4Template template, bool noCache, Encoding encoding, string output, IDictionary<string, object> parameters)
     {
         GenerateToFile(template, noCache, encoding, output, parameters);
     }
 
-    void IGenerator.Generate(string template, TextWriter output, IDictionary<string, object> parameters)
+    void IGenerator.Generate(T4Template template, TextWriter output, IDictionary<string, object> parameters)
     {
         Generate(template, false, output, parameters);
     }
 
-    void IGenerator.Generate(string template, bool noCache, TextWriter output, IDictionary<string, object> parameters)
+    void IGenerator.Generate(T4Template template, bool noCache, TextWriter output, IDictionary<string, object> parameters)
     {
         try
         {
@@ -460,7 +456,7 @@ public class Generator : IGenerator
         }
     }
 
-    Task IGenerator.Compile(IEnumerable<string> templates)
+    Task IGenerator.Compile(IEnumerable<T4Template> templates)
     {
         var task = new Task(() => Parallel.ForEach(templates, template => GetGeneratorType(template, false)));
         task.Start();
@@ -468,7 +464,7 @@ public class Generator : IGenerator
         return task;
     }
 
-    Task IGenerator.Compile(IEnumerable<string> templates, bool noCache)
+    Task IGenerator.Compile(IEnumerable<T4Template> templates, bool noCache)
     {
         var task = new Task(() => Parallel.ForEach(templates, template => GetGeneratorType(template, noCache)));
         task.Start();

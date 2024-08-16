@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,7 +39,9 @@ namespace Scotec.T4.UnitTest.HighLoad
                 //Run(tempFile, "test", new object[0]);
             }
 
-            var files = Directory.GetFiles( tempPath, "*.t4" );
+            var files = Directory.GetFiles( tempPath, "*.t4" )
+                                 .Select(file => T4Template.FromFile(file))
+                                 .ToList();
 
             var t1 = DateTime.Now;
 
@@ -55,8 +58,9 @@ namespace Scotec.T4.UnitTest.HighLoad
                 {
                     var stream = new MemoryStream();
                     var textWriter = new StreamWriter(stream, Encoding.UTF32);
-
-                    Generator.Generate(BuildPath(file), textWriter, null);
+                    var path = BuildPath(file.File.FullName); 
+                    var template = T4Template.FromFile(path);
+                    Generator.Generate(template, textWriter, null);
                 });
 
 

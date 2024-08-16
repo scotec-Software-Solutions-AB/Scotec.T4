@@ -78,7 +78,7 @@ public interface IGenerator
     /// </summary>
     /// <param name="templates"> A list of templates to precompile. </param>
     /// <returns> Return a Task object. This can be used to wait until the compilation has finished. </returns>
-    Task Compile(IEnumerable<string> templates);
+    Task Compile(IEnumerable<T4Template> templates);
 
     /// <summary>
     ///     Asynchronously precompiles a list of templates without generating text. You don't have to wait until this method
@@ -87,5 +87,5 @@ public interface IGenerator
     /// <param name="templates"> A list of templates to precompile. </param>
     /// <param name="noCache">The generator always creates and loads a new assembly for the given template</param>
     /// <returns> Return a Task object. This can be used to wait until the compilation has finished. </returns>
-    Task Compile(IEnumerable<string> templates, bool noCache);
+    Task Compile(IEnumerable<T4Template> templates, bool noCache);
 }
