@@ -122,7 +122,7 @@ internal class T4Compiler
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
 #else
         // Add the System.dll as default. Thus it is not needed in the template file.
-        assemblyPaths.Add( "System.dll" );
+        //assemblyPaths.Add( "System.dll" );
         var libs = AppDomain.CurrentDomain.GetAssemblies();
         assemblyPaths.AddRange( libs.Where( lib => !lib.IsDynamic ).Select( lib => lib.Location ) );
 #endif
