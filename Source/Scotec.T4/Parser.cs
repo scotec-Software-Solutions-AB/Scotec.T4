@@ -6,9 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Scotec.T4.Syntax;
-#if !NETFRAMEWORK
-using System.Runtime.Loader;
-#endif
 
 #endregion
 

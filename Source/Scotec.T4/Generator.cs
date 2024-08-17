@@ -6,10 +6,6 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-#if !NETFRAMEWORK
-using System.Runtime.Loader;
-#endif
-
 #endregion
 
 namespace Scotec.T4;

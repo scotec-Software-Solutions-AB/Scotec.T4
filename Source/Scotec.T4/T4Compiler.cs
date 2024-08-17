@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using Scotec.T4.CodeBuilder;
 using Scotec.T4.Compiler;
 using Scotec.T4.Syntax;
-#if !NETFRAMEWORK
+#if NET6_0_OR_GREATER
 using System.Runtime.Loader;
 #endif
 
@@ -66,7 +66,7 @@ internal class T4Compiler
 
         stream.Seek(0, SeekOrigin.Begin);
 
-#if !NETFRAMEWORK
+#if NET6_0_OR_GREATERX
         var currentLoadContext = AssemblyLoadContext.GetLoadContext(GetType().Assembly);
         var assembly = currentLoadContext.LoadFromStream(stream);
 #else
@@ -118,13 +118,16 @@ internal class T4Compiler
         var referencePaths = GetReferencePaths();
         var assemblyPaths = assemblies.Select(assembly => FindAssembly(assembly, referencePaths)).ToList();
 
-#if !NETFRAMEWORK
+#if NET6_0_OR_GREATER
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
 #else
         // Add the System.dll as default. Thus it is not needed in the template file.
         //assemblyPaths.Add( "System.dll" );
         var libs = AppDomain.CurrentDomain.GetAssemblies();
-        assemblyPaths.AddRange( libs.Where( lib => !lib.IsDynamic ).Select( lib => lib.Location ) );
+        assemblyPaths.AddRange( libs.Where( lib => !lib.IsDynamic && !string.IsNullOrEmpty(lib.Location) )
+                                    // When running in .NET Framework, lib.IsDynamic returns false for generated assemblies.
+                                    // Therefore, check the location. This should be emty in that case.
+                                    .Select( lib => lib.Location ) );
 #endif
         return assemblyPaths.ToArray();
     }
