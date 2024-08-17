@@ -1,4 +1,4 @@
-name: Build Scotec.T4
+name: Build $ Deploy Scotec.T4
 
 on: [workflow_dispatch]
 
