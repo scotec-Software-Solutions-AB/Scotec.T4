@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Emit;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Scotec.T4;
@@ -29,5 +31,17 @@ public class TextGenerator
         }
 
         await generator.GenerateAsync(writer);
+    }
+
+    public async Task<string> Generate(IDictionary<string, object> parameters)
+    {
+        using var stream = new MemoryStream();
+        using var textWriter = new StreamWriter(stream, Encoding.UTF32);
+        await Generate(textWriter, parameters);
+
+        stream.Seek(0, SeekOrigin.Begin);
+        using var textReader = new StreamReader(stream);
+
+        return await textReader.ReadToEndAsync();
     }
 }
