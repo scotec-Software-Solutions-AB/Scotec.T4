@@ -53,4 +53,20 @@
 		<Title>Scotec.T4</Title>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<!--<IsPackable>true</IsPackable>-->
+		<DebugSymbols>true</DebugSymbols>
+		<IncludeSymbols>true</IncludeSymbols>
+		<DebugType>portable</DebugType>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!--<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>-->
+		<EmbedAllSources>true</EmbedAllSources>
+	</PropertyGroup>
+
+	<!-- The CI property is define in GitHub Actions and is always set to 'true'. -->
+	<PropertyGroup Condition="'$(CI)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
 </Project>
