@@ -20,10 +20,8 @@ internal class VisualBasicCompiler : CodeCompiler
             syntaxTrees.Add(CSharpSyntaxTree.ParseText(codeBehind));
         }
 
-        var x = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary);
-
         return VisualBasicCompilation.Create($"{className}_{Guid.NewGuid():D}.dll", syntaxTrees, references,
-            new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, false, null, null, "Script", null, null, OptionStrict.Off, true, true, false,
+            new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, false, null, null, null, null, null, OptionStrict.Off, true, true, false,
                 null, false, OptimizationLevel.Release));
     }
 }

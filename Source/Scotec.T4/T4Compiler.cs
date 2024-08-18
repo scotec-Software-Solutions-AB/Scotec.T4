@@ -67,7 +67,7 @@ internal class T4Compiler
 
         stream.Seek(0, SeekOrigin.Begin);
 
-#if NET6_0_OR_GREATERX
+#if NET6_0_OR_GREATER
         var currentLoadContext = AssemblyLoadContext.GetLoadContext(GetType().Assembly);
         var assembly = currentLoadContext.LoadFromStream(stream);
 #else
@@ -119,7 +119,7 @@ internal class T4Compiler
         var referencePaths = GetReferencePaths();
         var assemblyPaths = assemblies.Select(assembly => FindAssembly(assembly, referencePaths)).ToList();
 
-#if NET6_0_OR_GREATERX
+#if NET6_0_OR_GREATER
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
 #else
         // Add the System.dll as default. Thus it is not needed in the template file.

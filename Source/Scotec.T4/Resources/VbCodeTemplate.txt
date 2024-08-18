@@ -3,7 +3,7 @@
 Namespace <%namespace%>
 
 	Public NotInheritable Partial Class <%classname%>
-		Inherits <%baseclassname%>
+		Inherits Global.<%baseclassname%>
 
 <%fields%>
 
