@@ -47,7 +47,8 @@ internal class T4Compiler
         }
 
         var assemlyPaths = GetReferencedAssemlies(parserResult);
-        var references = assemlyPaths.Select(path => MetadataReference.CreateFromFile(path)).ToArray();
+        var references = assemlyPaths.Where(path => !string.IsNullOrEmpty(path))
+                                     .Select(path => MetadataReference.CreateFromFile(path)).ToArray();
         var compiler = GetCompiler(templateDirective.Language);
         var compilation = compiler.Compile(codeBuilder.ClassName, code, codeFile, references);
 
@@ -118,7 +119,7 @@ internal class T4Compiler
         var referencePaths = GetReferencePaths();
         var assemblyPaths = assemblies.Select(assembly => FindAssembly(assembly, referencePaths)).ToList();
 
-#if NET6_0_OR_GREATER
+#if NET6_0_OR_GREATERX
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
 #else
         // Add the System.dll as default. Thus it is not needed in the template file.
