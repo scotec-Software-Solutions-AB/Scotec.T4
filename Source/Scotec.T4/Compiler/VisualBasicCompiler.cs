@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.VisualBasic;
+using LanguageVersion = Microsoft.CodeAnalysis.VisualBasic.LanguageVersion;
 
 #endregion
 
@@ -14,7 +15,7 @@ internal class VisualBasicCompiler : CodeCompiler
 {
     internal override Compilation Compile(string className, string generatedCode, string codeBehind, PortableExecutableReference[] references)
     {
-        var syntaxTrees = new List<SyntaxTree> { VisualBasicSyntaxTree.ParseText(generatedCode) };
+        var syntaxTrees = new List<SyntaxTree> { VisualBasicSyntaxTree.ParseText(generatedCode, new VisualBasicParseOptions(LanguageVersion.Latest)) };
         if (!string.IsNullOrEmpty(codeBehind))
         {
             syntaxTrees.Add(CSharpSyntaxTree.ParseText(codeBehind));

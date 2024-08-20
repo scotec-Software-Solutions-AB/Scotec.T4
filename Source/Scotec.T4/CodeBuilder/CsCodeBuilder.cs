@@ -76,27 +76,36 @@ internal class CsCodeBuilder : CodeBuilder
     {
         foreach (var line in content)
         {
-            result.AppendLine($"\t\t\tawait WriteAsync( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} );");
+            result.AppendLine($"\t\t\tWrite( \"{Escape(line.Text)}\"{(line.HasEol ? " + EndOfLine" : string.Empty)} );");
         }
     }
 
     protected override void CreateInlineCode(StringBuilder result, string statement)
     {
-        result.AppendLine($"\t\t\tawait WriteAsync( {statement} );");
+        result.AppendLine($"\t\t\tWrite( {statement} );");
     }
 
     protected override string CreateMethodCall(StringBuilder result, IncludeDirective directive)
     {
         var parameters = GetParameters(IncludedTemplates[directive]);
 
-        result.AppendLine($"\t\t\tawait {directive.Name}TemplateMethodAsync({CreateCallParameters(parameters)});");
+        result.AppendLine($"\t\t\t{directive.Name}TemplateMethod({CreateCallParameters(parameters)});");
 
         return result.ToString();
     }
 
     protected override string BeginLinePragma(Part part)
     {
-        return $"#line {part.Line} \"{part.Source}\"\r\n";
+        var builder = new StringBuilder();
+        builder.Append($"#line {part.Line}");
+        if (!string.IsNullOrWhiteSpace(part.Source))
+        {
+            builder.Append($" \"{part.Source}\"");
+        }
+
+        builder.Append("\r\n");
+
+        return builder.ToString();
     }
 
     protected override string EndLinePragma()

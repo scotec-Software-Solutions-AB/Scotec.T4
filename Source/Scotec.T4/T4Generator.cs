@@ -32,41 +32,33 @@ public abstract class T4Generator
     /// </summary>
     protected TextWriter Output { get; private set; }
 
-    /// <summary>
-    ///     Generates the textual output. This method will be called by the template generator.
-    /// </summary>
-    /// <param name="output"> The target stream. </param>
-    public void Generate(TextWriter output)
-    {
-        GenerateAsync(output).GetAwaiter().GetResult();
-    }
 
     /// <summary>
     ///     Generates the textual output. This method will be called by the template generator.
     /// </summary>
     /// <param name="output"> The target stream. </param>
-    public async Task GenerateAsync(TextWriter output)
+    public void GenerateAsync(TextWriter output)
     {
         Output = output;
-        await GenerateAsync();
-        await output.FlushAsync();
+        Generate();
+        output.Flush();
 
     }
 
     /// <summary>
     ///     Used by the T4 text template generator.
     /// </summary>
-    protected abstract Task GenerateAsync();
+    protected abstract void Generate();
 
     /// <summary>
     ///     Used by the T4 text template generator. Can be also called in the code part of the template.
     /// </summary>
     [DebuggerStepThrough]
-    protected async Task WriteAsync(string text)
+    protected void Write(string text)
     {
         if (text != null)
         {
-            await Output.WriteAsync(text);
+            Output.Write(text);
         }
     }
 
@@ -74,11 +66,11 @@ public abstract class T4Generator
     ///     Used by the T4 text template generator. Can be also called in the code part of the template.
     /// </summary>
     [DebuggerStepThrough]
-    protected async Task WriteAsync(object value)
+    protected void Write(object value)
     {
         if (value != null)
         {
-            await WriteAsync(value.ToString());
+            Write(value.ToString());
         }
     }
 }

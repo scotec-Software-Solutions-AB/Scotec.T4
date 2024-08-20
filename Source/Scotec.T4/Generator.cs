@@ -50,7 +50,7 @@ public class Generator : IGenerator
     public void Generate(T4Template template, TextWriter output, IDictionary<string, object> parameters)
     {
         var textGenerator = Build(template);
-        textGenerator.Generate(output, parameters).GetAwaiter().GetResult();
+        textGenerator.Generate(output, parameters);
     }
 
     public Task Compile(IEnumerable<T4Template> templates)

@@ -2,7 +2,7 @@
 
 namespace <%namespace%>
 {
-	public sealed partial class <%classname%> : <%baseclassname%>
+	public sealed partial class <%classname%> : global::<%baseclassname%>
 	{
 <%fields%>
 
@@ -11,7 +11,7 @@ namespace <%namespace%>
 <%fieldinitializations%>
 		}
 		
-		protected override async Task GenerateAsync()
+		protected override void Generate()
 		{
 <%implementation%>
 		}

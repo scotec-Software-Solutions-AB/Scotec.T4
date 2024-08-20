@@ -12,9 +12,9 @@ Namespace <%namespace%>
 <%fieldinitializations%>
 		End Sub
 		
-		Protected Overrides Async Function GenerateAsync() As Task
+		Protected Overrides Sub Generate()
 <%implementation%>
-		End Function
+		End Sub
 
 <%features%>
 <%includes%>

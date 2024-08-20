@@ -13,7 +13,7 @@ internal class CSharpCompiler : CodeCompiler
 {
     internal override Compilation Compile(string className, string generatedCode, string codeBehind, PortableExecutableReference[] references)
     {
-        var syntaxTrees = new List<SyntaxTree> { CSharpSyntaxTree.ParseText(generatedCode) };
+        var syntaxTrees = new List<SyntaxTree> { CSharpSyntaxTree.ParseText(generatedCode, new CSharpParseOptions(LanguageVersion.Latest)) };
         if (!string.IsNullOrEmpty(codeBehind))
         {
             syntaxTrees.Add(CSharpSyntaxTree.ParseText(codeBehind));

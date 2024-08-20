@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using Microsoft.CodeAnalysis;
 using Scotec.T4.CodeBuilder;
 using Scotec.T4.Compiler;
@@ -22,6 +25,7 @@ internal class T4Compiler
         _settings = settings;
     }
 
+    private static int skip = 0;
     public Type Compile(ParserResult parserResult)
     {
         // Get the language.
@@ -45,7 +49,7 @@ internal class T4Compiler
             codeFileName = Helper.FindFile(codeFileName, parserResult.SearchPaths);
             codeFile = File.OpenText(codeFileName).ReadToEnd();
         }
-
+        
         var assemlyPaths = GetReferencedAssemlies(parserResult);
         var references = assemlyPaths.Where(path => !string.IsNullOrEmpty(path))
                                      .Select(path => MetadataReference.CreateFromFile(path)).ToArray();
@@ -67,13 +71,22 @@ internal class T4Compiler
 
         stream.Seek(0, SeekOrigin.Begin);
 
+        Assembly assembly;
+        try
+        {
 #if NET6_0_OR_GREATER
         var currentLoadContext = AssemblyLoadContext.GetLoadContext(GetType().Assembly);
-        var assembly = currentLoadContext.LoadFromStream(stream);
+        assembly = currentLoadContext.LoadFromStream(stream);
 #else
-        var data = stream.ToArray();
-        var assembly = Assembly.Load(data);
+            var data = stream.ToArray();
+            assembly = Assembly.Load(data);
 #endif
+
+        }
+        catch (Exception e)
+        {
+            throw new T4Exception("Could not load generated file", e);
+        }
 
         return assembly.GetType(codeBuilder.GeneratorType);
     }
@@ -99,8 +112,14 @@ internal class T4Compiler
 
     private string[] GetReferencedAssemlies(ParserResult parserResult)
     {
+        var location = Assembly.GetExecutingAssembly().Location;
+        if (string.IsNullOrEmpty(location))
+        {
+            location = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory, "Scotec.T4.dll").FirstOrDefault();
+        }
+        
         // Include this assembly to the referenced assemblies list.
-        var assemblies = (IEnumerable<string>)new [] {Assembly.GetExecutingAssembly().Location};
+        var assemblies = (IEnumerable<string>)new List<string> {location};
 
 
         // Get all referenced assemblies from the main template.
