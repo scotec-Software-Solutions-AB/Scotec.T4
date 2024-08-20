@@ -37,7 +37,7 @@ public abstract class T4Generator
     ///     Generates the textual output. This method will be called by the template generator.
     /// </summary>
     /// <param name="output"> The target stream. </param>
-    public void GenerateAsync(TextWriter output)
+    public void Generate(TextWriter output)
     {
         Output = output;
         Generate();

@@ -46,12 +46,8 @@ namespace Scotec.T4.UnitTest.HighLoad
             var t1 = DateTime.Now;
 
             // Precompile templates.
-#if !FRAMEWORK35
+            // Do not await the task here. 
             var task = Generator.Compile( files );
-            //task.Wait();
-#else
-            Generator.Compile( files );
-#endif //FRAMEWORK35
 
             // Parallel text generation.
             Parallel.ForEach(files, file =>

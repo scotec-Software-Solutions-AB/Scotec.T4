@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -25,7 +23,6 @@ internal class T4Compiler
         _settings = settings;
     }
 
-    private static int skip = 0;
     public Type Compile(ParserResult parserResult)
     {
         // Get the language.

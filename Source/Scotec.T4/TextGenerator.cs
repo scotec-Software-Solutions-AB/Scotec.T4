@@ -24,13 +24,14 @@ public class TextGenerator
     {
         var parameterList = new List<object> { _lineEndings, parameters }.ToArray();
 
-        var generator = (T4Generator)Activator.CreateInstance(_generatorType, parameterList);
+        //var generator = (T4Generator)Activator.CreateInstance(_generatorType, parameterList);
+        dynamic generator = Activator.CreateInstance(_generatorType, parameterList);
         if (generator == null)
         {
             throw new T4Exception($"Could not create instance of T4 generator. (Generator name: {_name})");
         }
 
-        generator.GenerateAsync(writer);
+        generator.Generate(writer);
     }
 
     public string Generate(IDictionary<string, object> parameters)
