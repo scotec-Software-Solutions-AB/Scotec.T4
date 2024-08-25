@@ -18,6 +18,11 @@ internal class T4Compiler
 {
     private readonly T4Options _settings;
 
+    static T4Compiler()
+    {
+        RegisterAssemblyResolver();
+    }
+
     public T4Compiler(T4Options settings)
     {
         _settings = settings;
@@ -47,7 +52,7 @@ internal class T4Compiler
             codeFile = File.OpenText(codeFileName).ReadToEnd();
         }
         
-        var assemlyPaths = GetReferencedAssemlies(parserResult);
+        var assemlyPaths = GetReferencedAssemblies(parserResult);
         var references = assemlyPaths.Where(path => !string.IsNullOrEmpty(path))
                                      .Select(path => MetadataReference.CreateFromFile(path)).ToArray();
         var compiler = GetCompiler(templateDirective.Language);
@@ -107,7 +112,7 @@ internal class T4Compiler
         return codeBuilder;
     }
 
-    private string[] GetReferencedAssemlies(ParserResult parserResult)
+    private string[] GetReferencedAssemblies(ParserResult parserResult)
     {
         var location = Assembly.GetExecutingAssembly().Location;
         if (string.IsNullOrEmpty(location))
@@ -237,5 +242,32 @@ internal class T4Compiler
             default:
                 throw new T4Exception($"Unknown language; {templateDirectiveLanguage} ");
         }
+    }
+
+    private static void RegisterAssemblyResolver()
+    {
+        AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+        {
+            var name = new AssemblyName(args.Name).Name;
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assembly = assemblies.FirstOrDefault(a => a.GetName().Name == name);
+            if (assembly != null)
+            {
+                return assembly;
+            }
+
+
+            //string assemblyPath = Directory.GetFiles(searchPath, $"{name}.dll", SearchOption.AllDirectories).FirstOrDefault();
+
+            //if(string.IsNullOrEmpty(assemblyPath))
+            //{
+            //    var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            //    return assemblies.FirstOrDefault(a => a.FullName.Contains("Scotec.T4"));
+            //    return Assembly.LoadFrom(assemblyPath);
+            //}
+
+            return null;
+        };
+
     }
 }
