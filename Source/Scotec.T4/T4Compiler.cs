@@ -143,12 +143,12 @@ internal class T4Compiler
 #if NET6_0_OR_GREATER
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
 #else
-        // Add the System.dll as default. Thus it is not needed in the template file.
+        // Add the System.dll as default. Thus, it is not needed in the template file.
         //assemblyPaths.Add( "System.dll" );
         var libs = AppDomain.CurrentDomain.GetAssemblies();
         assemblyPaths.AddRange( libs.Where( lib => !lib.IsDynamic && !string.IsNullOrEmpty(lib.Location) )
                                     // When running in .NET Framework, lib.IsDynamic returns false for generated assemblies.
-                                    // Therefore, check the location. This should be emty in that case.
+                                    // Therefore, check the location. This should be empty in that case.
                                     .Select( lib => lib.Location ) );
 #endif
         return assemblyPaths.ToArray();
@@ -246,6 +246,10 @@ internal class T4Compiler
 
     private static void RegisterAssemblyResolver()
     {
+        // If the T4 generator is loaded within a SourceGenerator, the generated code cannot be compiled.
+        // The generated code references the Scotec.T4 assembly, which is not found by the compiler even
+        // though it is loaded in the current process. In response to the AssemblyResolve event, it is
+        // sufficient to return the already loaded assembly.
         AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
         {
             var name = new AssemblyName(args.Name).Name;
