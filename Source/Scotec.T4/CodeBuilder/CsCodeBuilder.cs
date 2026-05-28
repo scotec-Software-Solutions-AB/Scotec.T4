@@ -45,9 +45,14 @@ internal class CsCodeBuilder : CodeBuilder
         return result.ToString();
     }
 
+    protected override string CreateConstructorParameters(IEnumerable<Parameter> parameters)
+    {
+        return ", IDictionary<string, object> parameters";
+    }
+
     protected override string CreateParameters(IEnumerable<Parameter> parameters)
     {
-        return string.Join(",", parameters.Select(parameter => $"{parameter.Type} {parameter.Name}"));
+        return string.Join(", ", parameters.Select(parameter => $"{parameter.Type} {parameter.Name}"));
     }
 
     protected override string CreateCallParameters(IEnumerable<Parameter> parameters)
@@ -61,7 +66,7 @@ internal class CsCodeBuilder : CodeBuilder
 
         foreach (var parameter in parameters)
         {
-            result.AppendLine(string.Format("\t\t\tthis.{0} = {0};", parameter.Name));
+            result.AppendLine($"\t\t\tthis.{parameter.Name} = ({parameter.Type})parameters[\"{parameter.Name}\"];");
         }
 
         return result.ToString();
@@ -91,7 +96,16 @@ internal class CsCodeBuilder : CodeBuilder
 
     protected override string BeginLinePragma(Part part)
     {
-        return $"#line {part.Line} \"{part.Source}\"\r\n";
+        var builder = new StringBuilder();
+        builder.Append($"#line {part.Line}");
+        if (!string.IsNullOrWhiteSpace(part.Source))
+        {
+            builder.Append($" \"{part.Source}\"");
+        }
+
+        builder.Append("\r\n");
+
+        return builder.ToString();
     }
 
     protected override string EndLinePragma()

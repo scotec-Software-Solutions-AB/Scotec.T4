@@ -2,6 +2,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,25 +39,24 @@ namespace Scotec.T4.UnitTest.HighLoad
                 //Run(tempFile, "test", new object[0]);
             }
 
-            var files = Directory.GetFiles( tempPath, "*.t4" );
+            var files = Directory.GetFiles( tempPath, "*.t4" )
+                                 .Select(file => T4Template.FromFile(file))
+                                 .ToList();
 
             var t1 = DateTime.Now;
 
             // Precompile templates.
-#if !FRAMEWORK35
+            // Do not await the task here. 
             var task = Generator.Compile( files );
-            //task.Wait();
-#else
-            Generator.Compile( files );
-#endif //FRAMEWORK35
 
             // Parallel text generation.
             Parallel.ForEach(files, file =>
                 {
                     var stream = new MemoryStream();
                     var textWriter = new StreamWriter(stream, Encoding.UTF32);
-
-                    Generator.Generate(BuildPath(file), textWriter, new object[] { });
+                    var path = BuildPath(file.File); 
+                    var template = T4Template.FromFile(path);
+                    Generator.Generate(template, textWriter, null);
                 });
 
 

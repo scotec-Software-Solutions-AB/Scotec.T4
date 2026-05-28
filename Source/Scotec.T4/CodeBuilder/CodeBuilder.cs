@@ -11,9 +11,21 @@ namespace Scotec.T4.CodeBuilder;
 
 internal abstract class CodeBuilder
 {
+    private readonly string[] _defaultImports;
     private string _code;
     private IEnumerable<string> _imports;
     private IEnumerable<Parameter> _parameters;
+
+    protected CodeBuilder()
+    {
+        _defaultImports = new[]
+        {
+            "System",
+            "System.Linq",
+            "System.Threading.Tasks",
+            "System.Collections.Generic"
+        };
+    }
 
     protected IDictionary<IncludeDirective, IEnumerable<Part>> IncludedTemplates { get; set; }
 
@@ -55,7 +67,7 @@ internal abstract class CodeBuilder
 
         if (string.IsNullOrEmpty(fullName))
         {
-            ClassName = ParserResult.TemplateName;
+            ClassName = ParserResult.Template.Name;
             Namespace = "Scotec.T4";
         }
         else
@@ -70,17 +82,13 @@ internal abstract class CodeBuilder
     private void GetImports()
     {
         // Get all imports from main template.
-        var imports = (from p in Parts
-                       where p is ImportDirective
-                       select ((ImportDirective)p).Namespace).ToList();
+        var imports = Parts.OfType<ImportDirective>().Select(directive => directive.Namespace);
 
         // Add all imports from included templates.
-        imports = imports.Union(from i in IncludedTemplates.Values
-                                from p in i
-                                where p is ImportDirective
-                                select ((ImportDirective)p).Namespace).ToList();
+        imports = imports.Concat(IncludedTemplates.Values.SelectMany(included => included.OfType<ImportDirective>()
+                                                                                         .Select(directive => directive.Namespace)));
 
-        _imports = imports;
+        _imports = _defaultImports.Concat(imports).Distinct().ToList();
     }
 
     private void GetParameters()
@@ -100,7 +108,7 @@ internal abstract class CodeBuilder
     {
         var imports = CreateImports(_imports);
         var fields = CreateFields(_parameters);
-        var parameters = _parameters.Any() ? $", {CreateParameters(_parameters)}" : string.Empty;
+        var parameters = CreateConstructorParameters(_parameters);
         var initializers = CreateFieldInitializers(_parameters);
         var implementation = CreateImplementation(Parts);
         var features = CreateFeatures();
@@ -133,34 +141,48 @@ internal abstract class CodeBuilder
 
         foreach (var part in allParts)
         {
-            if (part is StandardControlBlock block)
+            switch (part)
             {
-                result.Append(BeginLinePragma(part));
-                result.Append(block.Content);
-
-                // Always add a line break at the end of the standard control block.
-                result.Append("\n");
-                result.Append(EndLinePragma());
-            }
-            else if (part is TextBlock textBlock)
-            {
-                result.Append(BeginLinePragma(textBlock));
-                CreateTextBlock(result, CreateTextLines(textBlock.Content));
-                result.Append(EndLinePragma());
-            }
-            else if (part is ExpressionControlBlock controlBlock)
-            {
-                result.Append(BeginLinePragma(controlBlock));
-                CreateInlineCode(result, controlBlock.Content);
-                result.Append(EndLinePragma());
-            }
-            else if (part is IncludeDirective directive)
-            {
-                CreateIncludeCode(result, directive);
+                case StandardControlBlock block:
+                    AppendStandardControlBlock(part, block);
+                    break;
+                case TextBlock textBlock:
+                    AppendTextBlock(textBlock);
+                    break;
+                case ExpressionControlBlock controlBlock:
+                    AppendExpressionControlBlock(controlBlock);
+                    break;
+                case IncludeDirective directive:
+                    CreateIncludeCode(result, directive);
+                    break;
             }
         }
 
         return result;
+
+        void AppendStandardControlBlock(Part part, StandardControlBlock block)
+        {
+            result.Append(BeginLinePragma(part));
+            result.Append(block.Content);
+
+            // Always add a line break at the end of the standard control block.
+            result.Append("\n");
+            result.Append(EndLinePragma());
+        }
+
+        void AppendTextBlock(TextBlock textBlock)
+        {
+            result.Append(BeginLinePragma(textBlock));
+            CreateTextBlock(result, CreateTextLines(textBlock.Content));
+            result.Append(EndLinePragma());
+        }
+
+        void AppendExpressionControlBlock(ExpressionControlBlock controlBlock)
+        {
+            result.Append(BeginLinePragma(controlBlock));
+            CreateInlineCode(result, controlBlock.Content);
+            result.Append(EndLinePragma());
+        }
     }
 
     private void CreateIncludeCode(StringBuilder result, IncludeDirective directive)
@@ -239,6 +261,8 @@ internal abstract class CodeBuilder
     protected abstract string CreateFields(IEnumerable<Parameter> parameters);
 
     protected abstract string CreateParameters(IEnumerable<Parameter> parameters);
+
+    protected abstract string CreateConstructorParameters(IEnumerable<Parameter> parameters);
 
     protected abstract string CreateCallParameters(IEnumerable<Parameter> parameters);
 

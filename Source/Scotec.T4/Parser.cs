@@ -16,48 +16,65 @@ internal class Parser
     private static readonly Regex LineEndings = new("(\r\n|\n\r|\n|\r|\u0085|\u000C|\u2028|\u2029)", RegexOptions.Compiled);
     private static readonly Regex Identifier = new(@"[^\p{Ll}\p{Lu}\p{Lt}\p{Lo}\p{Nd}\p{Nl}\p{Mn}\p{Mc}\p{Cf}\p{Pc}\p{Lm}]", RegexOptions.Compiled);
 
-    public Parser(IGeneratorSettings settings)
+    public Parser(T4Options settings)
     {
         Settings = settings;
     }
 
-    private string TemplateFile { get; set; }
-    public int[] Lines { get; private set; }
-    private string TemplatePath { get; set; }
-    private IGeneratorSettings Settings { get; }
+    private T4Template Template { get; set; }
+    public int[] Lines { get; private set; }    
+    private T4Options Settings { get; }
 
-    public ParserResult Parse(string templateFile, string templatePath)
+    public ParserResult Parse(T4Template template)
     {
-        var result = new ParserResult { IncludedTemplates = new Dictionary<IncludeDirective, IEnumerable<Part>>() };
-        result.Parts = Parse(templateFile, templatePath, result.IncludedTemplates);
-        result.TemplateName = MakeIdentifier(Path.GetFileNameWithoutExtension(TemplateFile));
+        var searchPaths = new[] { AppContext.BaseDirectory }.Concat(Settings.SearchPaths).ToList();
+        if (!string.IsNullOrWhiteSpace(template.File))
+        {
+            var fullPath = Helper.FindFile(template.File, searchPaths);
+            searchPaths.Insert(0, Path.GetDirectoryName(fullPath));
+        }
 
-        return result;
+        var includedTemplates = new Dictionary<IncludeDirective, IEnumerable<Part>>();
+        var parts = Parse(template, searchPaths, includedTemplates);
+
+        return new ParserResult
+        {
+            Template = template,
+            IncludedTemplates = includedTemplates,
+            SearchPaths = searchPaths.ToList(),
+            Parts = parts
+        };
     }
 
-    private static string MakeIdentifier(string possibleIdentifier)
+    private void ReadTemplate(T4Template template, IList<string> searchPaths, out string content)
     {
-        return Identifier.Replace(possibleIdentifier, "_");
-    }
-
-    private IEnumerable<Part> Parse(string templateFile, string templatePath,
-                                    IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
-    {
-        TemplatePath = string.IsNullOrEmpty(templatePath) ? Path.GetDirectoryName(templateFile) : templatePath;
-        TemplateFile = MakePathAbsolute(templateFile);
-
-        var stream = File.OpenText(TemplateFile);
+        Func<string> readContent;
+        if (string.IsNullOrWhiteSpace(template.File))
+        {
+            readContent = () => template.Template;
+        }
+        else
+        {
+            readContent = () =>
+            {
+                using var stream = File.OpenText(Helper.FindFile(template.File, searchPaths));
+                return LineEndings.Replace(stream.ReadToEnd(), "\n");
+            };
+        }
 
         // Read the content and convert all types of line endings to LF
-        var content = LineEndings.Replace(stream.ReadToEnd(), "\n");
-
         // It is not possible to print a backslash '\' before the opening tag '<=' because the regex interprets
         // a backslash as an escape character. Escaping the escape character would result in a very complex regex.
         // Therefore, replace the escaped backslash by an expression block containing a backslash as string.
         // '\\<# ... #>! results in '<#= "\\" #><# ... #>'
-        content = content.Replace(@"\\<#", @"<#= @""\"" #><#");
+        content = LineEndings.Replace(readContent(), "\n").Replace(@"\\<#", @"<#= @""\"" #><#");
+    }
 
-        stream.Close();
+    private IEnumerable<Part> Parse(T4Template template, IList<string> searchPaths,
+                                    IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
+    {
+        Template = template;
+        ReadTemplate(template, searchPaths, out var content);
 
         Lines = GetLines(content);
 
@@ -66,7 +83,7 @@ internal class Parser
 
         ReadTextBlocks(parts, content);
 
-        ReadIncludes(parts, includedTemplates);
+        ReadIncludes(parts, includedTemplates, searchPaths);
 
         // Sort all parts 
         parts = (from p in parts
@@ -108,7 +125,7 @@ internal class Parser
 
     private TextBlock CreateTextBlock(int position, string content)
     {
-        return new TextBlock(position, content) { Line = GetLineFromPosition(position), Source = TemplateFile };
+        return new TextBlock(position, content) { Line = GetLineFromPosition(position), Source = Template.File };
     }
 
     private void ReadExpressions(List<Part> parts, string content)
@@ -127,7 +144,7 @@ internal class Parser
         {
             Part part = type switch
             {
-                Expression.Directive => DirectiveFactory.CreateDirective(match, new MacroResolver(Settings)),
+                Expression.Directive => DirectiveFactory.CreateDirective(match, new MacroResolver(Settings.TemplateParameters)),
                 Expression.Comment => new CommentDirective(match),
                 Expression.StandardControlBlock => new StandardControlBlock(match),
                 Expression.ExpressionControlBlock => new ExpressionControlBlock(match),
@@ -138,13 +155,13 @@ internal class Parser
             if (part != null)
             {
                 part.Line = GetLineFromPosition(part.Position);
-                part.Source = TemplateFile;
+                part.Source = Template.File;
                 parts.Add(part);
             }
         }
     }
 
-    private void ReadIncludes(IEnumerable<Part> parts, IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates)
+    private void ReadIncludes(IEnumerable<Part> parts, IDictionary<IncludeDirective, IEnumerable<Part>> includedTemplates, IList<string> searchPaths)
     {
         var includes = (from p in parts
                         where p is IncludeDirective
@@ -153,12 +170,7 @@ internal class Parser
         foreach (var include in includes)
         {
             var parser = new Parser(Settings);
-            //var fullPath = MakePathAbsolute( include.File );
-            //var templateName = Path.GetFileNameWithoutExtension( fullPath );
-            //if( templateName == null )
-            //    throw new T4Exception( "Invalid template file name." );
 
-            //if((from i in includedTemplates.Keys where i.Name == templateName select i).Any())
             if (includedTemplates.ContainsKey(include))
             {
                 continue;
@@ -166,10 +178,12 @@ internal class Parser
 
             // Add the key but do not assign a value. We need the key as a break condition in subsequent calls to ReadIncludes().
             includedTemplates.Add(include, null);
-            var includedParts = parser.Parse(include.File, TemplatePath, includedTemplates).ToArray();
+
+            var includedFile = Helper.FindFile(include.File, searchPaths);
+            var includedParts = parser.Parse(T4Template.FromFile(includedFile), searchPaths, includedTemplates).ToArray();
             includedTemplates[include] = includedParts;
 
-            ReadIncludes(includedParts, includedTemplates);
+            ReadIncludes(includedParts, includedTemplates, searchPaths);
         }
     }
 
@@ -178,17 +192,5 @@ internal class Parser
         return Array.IndexOf(Lines, (from l in Lines
                                      where l <= position
                                      select l).Last()) + 1;
-    }
-
-    private string MakePathAbsolute(string path)
-    {
-        if (Path.IsPathRooted(path))
-        {
-            return path;
-        }
-
-        var newPath = new Uri(Path.Combine(TemplatePath, path));
-
-        return newPath.LocalPath;
     }
 }

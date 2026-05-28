@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Scotec.T4.UnitTest/Scotec.T4.UnitTest.csproj" />
+  <Project Path="Scotec.T4/Scotec.T4.csproj" />
+</Solution>

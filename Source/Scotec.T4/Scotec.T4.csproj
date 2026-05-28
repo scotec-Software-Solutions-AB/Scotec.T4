@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-	  <LangVersion>latest</LangVersion>
-    <DocumentationFile>Scotec.T4.xml</DocumentationFile>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <!--<DocumentationFile>Scotec.T4.xml</DocumentationFile>-->
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,13 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis" Version="4.10.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="5.0.0" />
   </ItemGroup>
 
+  <!-- Removed .NET Standard specific package references -->
+
 	<ItemGroup>
-		<None Include="..\Logo.png" Pack="true" PackagePath="" />
+		<None Include="..\..\Logo.png" Pack="true" PackagePath="" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -38,6 +39,7 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<IsPublishable>True</IsPublishable>
 		<PackageIcon>Logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageProjectUrl>https://www.scotec-software.com</PackageProjectUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
@@ -45,6 +47,22 @@
 		<RepositoryType>git</RepositoryType>
 		<SignAssembly>False</SignAssembly>
 		<Title>Scotec.T4</Title>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<!--<IsPackable>true</IsPackable>-->
+		<DebugSymbols>true</DebugSymbols>
+		<IncludeSymbols>true</IncludeSymbols>
+		<DebugType>portable</DebugType>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<!--<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>-->
+		<EmbedAllSources>true</EmbedAllSources>
+	</PropertyGroup>
+
+	<!-- The CI property is define in GitHub Actions and is always set to 'true'. -->
+	<PropertyGroup Condition="'$(CI)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
 </Project>

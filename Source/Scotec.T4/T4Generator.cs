@@ -2,6 +2,7 @@
 
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -31,6 +32,7 @@ public abstract class T4Generator
     /// </summary>
     protected TextWriter Output { get; private set; }
 
+
     /// <summary>
     ///     Generates the textual output. This method will be called by the template generator.
     /// </summary>
@@ -38,8 +40,9 @@ public abstract class T4Generator
     public void Generate(TextWriter output)
     {
         Output = output;
-
         Generate();
+        output.Flush();
+
     }
 
     /// <summary>

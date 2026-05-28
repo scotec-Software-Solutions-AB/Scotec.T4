@@ -2,7 +2,7 @@
 
 namespace <%namespace%>
 {
-	public sealed partial class <%classname%> : <%baseclassname%>
+	public sealed partial class <%classname%> : global::<%baseclassname%>
 	{
 <%fields%>
 
