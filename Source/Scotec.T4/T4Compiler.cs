@@ -8,9 +8,7 @@ using Microsoft.CodeAnalysis;
 using Scotec.T4.CodeBuilder;
 using Scotec.T4.Compiler;
 using Scotec.T4.Syntax;
-#if NET6_0_OR_GREATER
 using System.Runtime.Loader;
-#endif
 
 namespace Scotec.T4;
 
@@ -76,14 +74,8 @@ internal class T4Compiler
         Assembly assembly;
         try
         {
-#if NET6_0_OR_GREATER
-        var currentLoadContext = AssemblyLoadContext.GetLoadContext(GetType().Assembly);
-        assembly = currentLoadContext.LoadFromStream(stream);
-#else
-            var data = stream.ToArray();
-            assembly = Assembly.Load(data);
-#endif
-
+            var currentLoadContext = AssemblyLoadContext.GetLoadContext(GetType().Assembly);
+            assembly = currentLoadContext.LoadFromStream(stream);
         }
         catch (Exception e)
         {
@@ -140,17 +132,8 @@ internal class T4Compiler
         var referencePaths = GetReferencePaths();
         var assemblyPaths = assemblies.Select(assembly => FindAssembly(assembly, referencePaths)).ToList();
 
-#if NET6_0_OR_GREATER
         assemblyPaths.AddRange(((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")).Split(Path.PathSeparator));
-#else
-        // Add the System.dll as default. Thus, it is not needed in the template file.
-        //assemblyPaths.Add( "System.dll" );
-        var libs = AppDomain.CurrentDomain.GetAssemblies();
-        assemblyPaths.AddRange( libs.Where( lib => !lib.IsDynamic && !string.IsNullOrEmpty(lib.Location) )
-                                    // When running in .NET Framework, lib.IsDynamic returns false for generated assemblies.
-                                    // Therefore, check the location. This should be empty in that case.
-                                    .Select( lib => lib.Location ) );
-#endif
+
         return assemblyPaths.ToArray();
     }
 
