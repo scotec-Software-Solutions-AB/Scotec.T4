@@ -29,7 +29,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore ./Source/Scotec.T4.sln
+      run: dotnet restore ./Source/Scotec.T4.slnx
     - name: Build
-      run: dotnet build --no-restore ./Source/Scotec.T4.sln -c Release -p:Version=$GITVERSION_ASSEMBLYSEMVER -p:PackageVersion=$GITVERSION_SEMVER -p:CompanyName="scotec Software Solutions AB"
+      run: dotnet build --no-restore ./Source/Scotec.T4.slnx -c Release -p:Version=$GITVERSION_ASSEMBLYSEMVER -p:PackageVersion=$GITVERSION_SEMVER -p:CompanyName="scotec Software Solutions AB"
  
